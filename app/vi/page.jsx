@@ -102,9 +102,9 @@ export default function HomeVi() {
           <div className="fy-chip">Cập nhật năm tài chính 2026–27</div>
           <h1>Công cụ tính thuế &amp; lương ở Úc, trả lời thẳng vào vấn đề</h1>
           <p>
-            Miễn phí, nhanh và riêng tư — mọi công cụ của Calcroo chạy ngay trên trình duyệt của bạn. Không cần đăng
-            ký, không tường phí, không &quot;để lại số điện thoại để được tư vấn&quot;. Nhập số, thấy ngay tiền của
-            mình đi đâu.
+            Miễn phí, nhanh và riêng tư — mọi công cụ của Calcroo chạy ngay trên trình duyệt của bạn, từ tính thuế,
+            tính lương đến chỉnh ảnh visa, gộp PDF và tạo CV. Không cần đăng ký, không tường phí, không &quot;để lại
+            số điện thoại để được tư vấn&quot;. Nhập số, thấy ngay tiền của mình đi đâu.
           </p>
         </section>
 
@@ -134,8 +134,9 @@ export default function HomeVi() {
           </p>
           <p>
             Phiên bản tiếng Việt không phải bản dịch máy: nội dung viết riêng cho người Việt đang sống, học và làm
-            việc tại Úc — từ chuyện TFN với ABN, khai thuế lần đầu, đến lương casual và làm hai job. Muốn có công cụ
-            nào tiếp theo? <Link href="/contact/">Nhắn cho chúng tôi</Link>.
+            việc tại Úc — từ chuyện TFN với ABN, khai thuế lần đầu, lương casual, đến bộ công cụ giấy tờ đã chạy đủ:
+            chỉnh ảnh visa chuẩn 35×45mm, nén ảnh giấy tờ, gộp PDF và tạo CV chuẩn Úc. Muốn có công cụ nào tiếp theo?{' '}
+            <Link href="/contact/">Nhắn cho chúng tôi</Link>.
           </p>
         </article>
       </main>

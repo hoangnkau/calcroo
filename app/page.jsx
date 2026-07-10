@@ -99,8 +99,9 @@ export default function Home() {
           <div className="fy-chip">Updated for FY 2026–27</div>
           <h1>Australian tax &amp; pay calculators that give you a straight answer</h1>
           <p>
-            Free, fast and private — every Calcroo tool runs entirely in your browser. No sign-up, no spreadsheet
-            downloads, no &quot;talk to an adviser&quot; wall. Just type your numbers and see where your money goes.
+            Free, fast and private — every Calcroo tool runs entirely in your browser, from tax and pay calculators
+            to visa-photo, PDF and CV tools. No sign-up, no &quot;talk to an adviser&quot; wall. Just type your numbers
+            and see where your money goes.
           </p>
         </section>
 
@@ -130,8 +131,9 @@ export default function Home() {
           </p>
           <p>
             We started with the calculations Australians look up most — income tax, take-home pay, HECS-HELP and tax
-            refunds — and we&apos;re now building the paperwork tools that go with them. Something you&apos;d like us
-            to build? <Link href="/contact/">Tell us</Link>.
+            refunds — and the paperwork tools that go with them are now live too: visa photos to the 35×45mm standard,
+            document compression, PDF merging and an ATS-friendly Australian CV builder, all running privately in your
+            browser. Something you&apos;d like us to build next? <Link href="/contact/">Tell us</Link>.
           </p>
         </article>
       </main>
