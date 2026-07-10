@@ -115,7 +115,7 @@ export default function Page() {
 
           <h2>Deductions người Việt hay bỏ sót</h2>
           <ul>
-            <li><strong>Working-from-home:</strong> phương pháp fixed-rate tính theo giờ — cần ghi lại số giờ làm ở nhà (nhật ký, roster đều được).</li>
+            <li><strong>Working-from-home:</strong> phương pháp fixed-rate tính theo giờ — cần ghi lại số giờ làm ở nhà (nhật ký, roster đều được). Bảng chi tiết deductions trong công cụ có sẵn ô nhập giờ, tự nhân hộ bạn.</li>
             <li><strong>Đồ nghề, đồng phục có logo và tiền giặt,</strong> phí công đoàn, phí hội nghề nghiệp.</li>
             <li><strong>Học nâng cao tay nghề</strong> gắn với việc hiện tại (RSA, chứng chỉ ngành...), di chuyển giữa hai nơi làm (không tính nhà ↔ chỗ làm).</li>
             <li><strong>Phí tax agent năm ngoái</strong> và từ thiện $2+ cho tổ chức có đăng ký DGR.</li>

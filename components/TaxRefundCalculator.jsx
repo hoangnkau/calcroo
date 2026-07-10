@@ -1,7 +1,9 @@
 'use client';
 
 import { useState } from 'react';
-import { FY_DATA, incomeTaxForMonths, litoFor, medicareFor, hecsFor, mlsFor, partYearThreshold } from '../lib/tax';
+import {
+  FY_DATA, incomeTaxForMonths, litoFor, medicareFor, hecsFor, mlsFor, partYearThreshold, WFH_FIXED_RATE,
+} from '../lib/tax';
 
 const STRINGS = {
   en: {
@@ -10,7 +12,19 @@ const STRINGS = {
     yearHint: 'Lodging now (July 2026)? That is your 2025-26 return. Pick 2026-27 to plan ahead.',
     incomeLbl: 'Total income (salary, interest, etc.)',
     dedLbl: 'Total deductions',
-    dedHint: 'Work-related expenses, working-from-home, donations, agent fees...',
+    dedHint: 'Enter a total, or open the breakdown below to itemise.',
+    dedAutoHint: 'Auto-summed from your breakdown below.',
+    itemTitle: 'Itemise deductions',
+    wfhLbl: 'Working-from-home hours (whole year)',
+    wfhRateLbl: 'c/hour',
+    wfhHint: 'Fixed-rate method. Keep a record of hours (diary or roster). Check the current rate on ato.gov.au.',
+    dCar: 'Work travel & car (not home-to-work)',
+    dCloth: 'Uniforms, protective clothing & laundry',
+    dTools: 'Tools, equipment & self-education',
+    dGifts: 'Donations ($2+ to registered charities)',
+    dAgent: 'Tax agent fee (paid last year)',
+    dOther: 'Other deductions',
+    itemTotal: 'Breakdown total',
     whLbl: 'Total tax withheld',
     whHint: 'From your income statement in myGov (ATO > Employment) or your final payslip.',
     hecsLbl: 'I have a HECS-HELP debt',
@@ -37,6 +51,8 @@ const STRINGS = {
     lHecs: 'HECS-HELP repayment',
     lLiab: 'Total tax assessed',
     lWh: 'Tax you already paid (withheld)',
+    perK: 'Refund per extra $1,000 deductions',
+    margLbl: 'Marginal tax rate',
   },
   vi: {
     inTitle: 'Thông tin khai thuế của bạn',
@@ -44,7 +60,19 @@ const STRINGS = {
     yearHint: 'Khai bây giờ (tháng 7/2026) tức là khai cho năm 2025-26. Chọn 2026-27 nếu muốn ước tính trước.',
     incomeLbl: 'Tổng thu nhập (lương, lãi bank...)',
     dedLbl: 'Tổng deductions (khoản khấu trừ)',
-    dedHint: 'Chi phí làm việc, working-from-home, từ thiện, phí tax agent...',
+    dedHint: 'Nhập tổng, hoặc mở bảng bên dưới để tính chi tiết.',
+    dedAutoHint: 'Tự cộng từ bảng chi tiết bên dưới.',
+    itemTitle: 'Tính chi tiết deductions',
+    wfhLbl: 'Số giờ làm việc tại nhà (cả năm)',
+    wfhRateLbl: 'c/giờ',
+    wfhHint: 'Phương pháp fixed-rate. Cần ghi lại số giờ (nhật ký, roster). Kiểm tra mức hiện hành trên ato.gov.au.',
+    dCar: 'Đi lại công việc & xe (không tính nhà ↔ chỗ làm)',
+    dCloth: 'Đồng phục, đồ bảo hộ & tiền giặt',
+    dTools: 'Dụng cụ, thiết bị & học nâng cao tay nghề',
+    dGifts: 'Từ thiện ($2+ cho tổ chức có đăng ký)',
+    dAgent: 'Phí tax agent (trả năm ngoái)',
+    dOther: 'Khoản khấu trừ khác',
+    itemTotal: 'Tổng bảng chi tiết',
     whLbl: 'Tổng thuế đã bị trừ (tax withheld)',
     whHint: 'Xem income statement trong myGov (ATO > Employment) hoặc payslip cuối năm.',
     hecsLbl: 'Tôi đang có nợ HECS-HELP',
@@ -71,17 +99,40 @@ const STRINGS = {
     lHecs: 'Trả nợ HECS-HELP',
     lLiab: 'Tổng thuế phải nộp',
     lWh: 'Thuế đã nộp qua lương',
+    perK: 'Hoàn thêm mỗi $1.000 deductions',
+    margLbl: 'Thuế suất biên',
   },
 };
 
 const fmt = (n) => '$' + Math.round(Math.abs(n)).toLocaleString('en-AU');
 const num = (s) => parseFloat(String(s).replace(/[^0-9.]/g, '')) || 0;
 
+function MoneyRow({ id, label, value, onChange }) {
+  return (
+    <div className="field">
+      <label htmlFor={id} style={{ fontSize: '.78rem' }}>{label}</label>
+      <div className="money-input">
+        <span>$</span>
+        <input type="text" id={id} inputMode="numeric" autoComplete="off" value={value} onChange={onChange} />
+      </div>
+    </div>
+  );
+}
+
 export default function TaxRefundCalculator({ lang = 'en' }) {
   const t = STRINGS[lang];
   const [fy, setFy] = useState('2025-26');
   const [income, setIncome] = useState('75,000');
-  const [ded, setDed] = useState('1,500');
+  const [dedTotal, setDedTotal] = useState('1,500');
+  const [itemise, setItemise] = useState(false);
+  const [wfhHours, setWfhHours] = useState('');
+  const [wfhRate, setWfhRate] = useState(String(Math.round(WFH_FIXED_RATE * 100)));
+  const [dCar, setDCar] = useState('');
+  const [dCloth, setDCloth] = useState('');
+  const [dTools, setDTools] = useState('');
+  const [dGifts, setDGifts] = useState('');
+  const [dAgent, setDAgent] = useState('');
+  const [dOther, setDOther] = useState('');
   const [wh, setWh] = useState('16,000');
   const [withHecs, setWithHecs] = useState(false);
   const [months, setMonths] = useState(12);
@@ -89,21 +140,31 @@ export default function TaxRefundCalculator({ lang = 'en' }) {
   const [mlMode, setMlMode] = useState('full');
   const [hasCover, setHasCover] = useState(false);
 
-  const taxable = Math.max(num(income) - num(ded), 0);
-  const gross = incomeTaxForMonths(taxable, fy, months);
-  const off = Math.min(litoFor(taxable, fy), gross);
-  const tax = gross - off;
-  const ml = mlMode === 'exempt' ? 0 : medicareFor(taxable, fy);
-  const testIncome = taxable + num(repSuper); // HECS + MLS income tests
-  const hc = withHecs ? hecsFor(testIncome, fy) : 0;
-  const mls = hasCover || mlMode === 'exempt' ? 0 : mlsFor(testIncome, fy);
-  const liability = tax + ml + hc + mls;
-  const result = num(wh) - liability;
+  const wfhDed = num(wfhHours) * ((num(wfhRate) || 70) / 100);
+  const itemSum = wfhDed + num(dCar) + num(dCloth) + num(dTools) + num(dGifts) + num(dAgent) + num(dOther);
+  const ded = itemise ? itemSum : num(dedTotal);
+
+  function liabilityAt(taxableY) {
+    const gross = incomeTaxForMonths(taxableY, fy, months);
+    const off = Math.min(litoFor(taxableY, fy), gross);
+    const tax = gross - off;
+    const ml = mlMode === 'exempt' ? 0 : medicareFor(taxableY, fy);
+    const test = taxableY + num(repSuper);
+    const hc = withHecs ? hecsFor(test, fy) : 0;
+    const mls = hasCover || mlMode === 'exempt' ? 0 : mlsFor(test, fy);
+    return { tax, ml, hc, mls, total: tax + ml + hc + mls };
+  }
+
+  const taxable = Math.max(num(income) - ded, 0);
+  const L = liabilityAt(taxable);
+  const result = num(wh) - L.total;
+  const perK = L.total - liabilityAt(Math.max(taxable - 1000, 0)).total; // hoàn thêm chính xác cho $1.000 deduction kế tiếp
 
   const onMoney = (set) => (e) => {
     const n = num(e.target.value);
     set(n ? n.toLocaleString('en-AU') : '');
   };
+  const onRaw = (set) => (e) => set(e.target.value.replace(/[^0-9.]/g, ''));
 
   const isRefund = result > 5;
   const isOwing = result < -5;
@@ -136,12 +197,48 @@ export default function TaxRefundCalculator({ lang = 'en' }) {
           <label htmlFor="r-ded">{t.dedLbl}</label>
           <div className="money-input">
             <span>$</span>
-            <input type="text" id="r-ded" inputMode="numeric" autoComplete="off" value={ded} onChange={onMoney(setDed)} />
+            <input
+              type="text" id="r-ded" inputMode="numeric" autoComplete="off"
+              value={itemise ? Math.round(itemSum).toLocaleString('en-AU') : dedTotal}
+              onChange={onMoney(setDedTotal)}
+              readOnly={itemise}
+              style={itemise ? { background: 'var(--green-soft)', borderColor: 'var(--green)' } : {}}
+            />
           </div>
-          <div className="hint">{t.dedHint}</div>
+          <div className="hint">{itemise ? t.dedAutoHint : t.dedHint}</div>
         </div>
 
-        <div className="field">
+        <details className="adv" onToggle={(e) => setItemise(e.currentTarget.open)}>
+          <summary>{t.itemTitle}</summary>
+
+          <div className="field">
+            <label htmlFor="r-wfh" style={{ fontSize: '.78rem' }}>{t.wfhLbl}</label>
+            <div className="grid" style={{ gap: '.6rem', gridTemplateColumns: '1.6fr 1fr' }}>
+              <div className="money-input">
+                <span>⏱</span>
+                <input type="text" id="r-wfh" inputMode="numeric" autoComplete="off" value={wfhHours} onChange={onRaw(setWfhHours)} />
+              </div>
+              <div className="money-input">
+                <span>¢</span>
+                <input type="text" aria-label={t.wfhRateLbl} inputMode="numeric" autoComplete="off" value={wfhRate} onChange={onRaw(setWfhRate)} />
+              </div>
+            </div>
+            <div className="hint">{t.wfhHint} {num(wfhHours) > 0 && <strong>= {fmt(wfhDed)}</strong>}</div>
+          </div>
+
+          <MoneyRow id="r-dcar" label={t.dCar} value={dCar} onChange={onMoney(setDCar)} />
+          <MoneyRow id="r-dcloth" label={t.dCloth} value={dCloth} onChange={onMoney(setDCloth)} />
+          <MoneyRow id="r-dtools" label={t.dTools} value={dTools} onChange={onMoney(setDTools)} />
+          <MoneyRow id="r-dgifts" label={t.dGifts} value={dGifts} onChange={onMoney(setDGifts)} />
+          <MoneyRow id="r-dagent" label={t.dAgent} value={dAgent} onChange={onMoney(setDAgent)} />
+          <MoneyRow id="r-dother" label={t.dOther} value={dOther} onChange={onMoney(setDOther)} />
+
+          <div className="hint" style={{ padding: '.6rem .9rem', border: '1.5px solid var(--green)', borderRadius: 9, color: 'var(--green)', fontWeight: 600 }}>
+            {t.itemTotal}: {fmt(itemSum)}
+          </div>
+        </details>
+
+        <div className="field" style={{ marginTop: '1.1rem' }}>
           <label htmlFor="r-wh">{t.whLbl}</label>
           <div className="money-input">
             <span>$</span>
@@ -213,18 +310,18 @@ export default function TaxRefundCalculator({ lang = 'en' }) {
           </div>
         </div>
 
-        <div className="lines">
+        <div className="lines" style={{ borderBottom: '1px dashed var(--line)' }}>
           <div className="line gross"><span className="k">{t.lTaxable}</span><span className="v">{fmt(taxable)}</span></div>
           {months < 12 && (
             <div className="line"><span className="k">{t.lThr}</span><span className="v">{fmt(thr)}</span></div>
           )}
-          <div className="line minus"><span className="k">{t.lTax}</span><span className="v">−{fmt(tax)}</span></div>
-          {ml > 0 && <div className="line minus"><span className="k">{t.lMl}</span><span className="v">−{fmt(ml)}</span></div>}
-          {mls > 0 && <div className="line minus"><span className="k">{t.lMls}</span><span className="v">−{fmt(mls)}</span></div>}
-          {withHecs && <div className="line minus"><span className="k">{t.lHecs}</span><span className="v">−{fmt(hc)}</span></div>}
+          <div className="line minus"><span className="k">{t.lTax}</span><span className="v">−{fmt(L.tax)}</span></div>
+          {L.ml > 0 && <div className="line minus"><span className="k">{t.lMl}</span><span className="v">−{fmt(L.ml)}</span></div>}
+          {L.mls > 0 && <div className="line minus"><span className="k">{t.lMls}</span><span className="v">−{fmt(L.mls)}</span></div>}
+          {withHecs && <div className="line minus"><span className="k">{t.lHecs}</span><span className="v">−{fmt(L.hc)}</span></div>}
           <div className="line minus" style={{ borderTop: '1px solid var(--line)', marginTop: '.4rem', paddingTop: '.6rem' }}>
             <span className="k" style={{ fontWeight: 600, color: 'var(--ink)' }}>{t.lLiab}</span>
-            <span className="v" style={{ fontWeight: 600 }}>−{fmt(liability)}</span>
+            <span className="v" style={{ fontWeight: 600 }}>−{fmt(L.total)}</span>
           </div>
           <div className="line plus"><span className="k">{t.lWh}</span><span className="v">+{fmt(num(wh))}</span></div>
           <div className="line total">
@@ -232,6 +329,13 @@ export default function TaxRefundCalculator({ lang = 'en' }) {
             <span className="v" style={{ color: isOwing ? 'var(--danger)' : 'var(--green)' }}>
               {isOwing ? '−' : ''}{fmt(result)}
             </span>
+          </div>
+        </div>
+
+        <div className="rate-strip">
+          <div>
+            <div className="n" style={{ color: 'var(--green)' }}>+{fmt(perK)}</div>
+            <div className="l">{t.perK}</div>
           </div>
         </div>
       </div>

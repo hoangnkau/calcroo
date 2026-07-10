@@ -118,7 +118,7 @@ export default function Page() {
 
           <h2>Deductions people forget</h2>
           <ul>
-            <li><strong>Working-from-home:</strong> the fixed-rate method (cents per hour) needs a record of hours — a diary or roster works.</li>
+            <li><strong>Working-from-home:</strong> the fixed-rate method needs a record of hours — a diary or roster works. The calculator's deduction breakdown has a built-in hours helper that does the maths for you.</li>
             <li><strong>Tools, uniforms and laundry,</strong> union fees, professional memberships and subscriptions used for work.</li>
             <li><strong>Self-education</strong> connected to your current job, and work-related travel between job sites (not home-to-work).</li>
             <li><strong>Last year’s tax agent fee</strong> is deductible this year, and donations of $2+ to registered charities.</li>
