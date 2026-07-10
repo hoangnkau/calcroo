@@ -54,7 +54,7 @@ export default function Page() {
 
   return (
     <>
-      <SiteHeader langHref="/income-tax-calculator/" langLabel="English" />
+      <SiteHeader homeHref="/vi/" langHref="/income-tax-calculator/" langLabel="English" />
       <main className="wrap">
         <section className="hero">
           <div className="fy-chip">Cập nhật năm tài chính 2026–27 · từ 1/7/2026</div>

@@ -5,6 +5,7 @@ export default function sitemap() {
   const now = new Date();
   return [
     { url: `${base}/`, lastModified: now, priority: 1 },
+    { url: `${base}/vi/`, lastModified: now, priority: 0.9 },
     { url: `${base}/income-tax-calculator/`, lastModified: now, priority: 0.9 },
     { url: `${base}/pay-calculator/`, lastModified: now, priority: 0.9 },
     { url: `${base}/hecs-repayment-calculator/`, lastModified: now, priority: 0.9 },

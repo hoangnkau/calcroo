@@ -55,7 +55,7 @@ export default function Page() {
 
   return (
     <>
-      <SiteHeader langHref="/hecs-repayment-calculator/" langLabel="English" />
+      <SiteHeader homeHref="/vi/" langHref="/hecs-repayment-calculator/" langLabel="English" />
       <main className="wrap">
         <section className="hero">
           <div className="fy-chip">Cập nhật 2026–27 · cách tính lũy tiến</div>

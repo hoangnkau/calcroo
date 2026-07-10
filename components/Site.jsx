@@ -14,11 +14,11 @@ export function RooLogo({ size = 26 }) {
   );
 }
 
-export function SiteHeader({ langHref, langLabel }) {
+export function SiteHeader({ langHref, langLabel, homeHref = '/' }) {
   return (
     <header className="site-header">
       <div className="wrap">
-        <Link href="/" className="brand">
+        <Link href={homeHref} className="brand">
           <RooLogo />
           <strong>
             calc<em>roo</em>

@@ -5,7 +5,7 @@ export const metadata = {
   title: 'Calcroo — Free Australian Tax & Pay Calculators (FY 2026–27)',
   description:
     'Free, fast Australian tax and pay calculators updated for FY 2026–27. Income tax, take-home pay, HECS-HELP and more — no sign-up, everything runs in your browser.',
-  alternates: { canonical: '/' },
+  alternates: { canonical: '/', languages: { en: '/', vi: '/vi/' } },
 };
 
 const TOOLS = [
@@ -34,7 +34,7 @@ const TOOLS = [
 export default function Home() {
   return (
     <>
-      <SiteHeader langHref="/vi/tinh-thue-thu-nhap-uc/" langLabel="Tiếng Việt" />
+      <SiteHeader langHref="/vi/" langLabel="Tiếng Việt" />
       <main className="wrap">
         <section className="hero">
           <div className="fy-chip">Updated for FY 2026–27</div>

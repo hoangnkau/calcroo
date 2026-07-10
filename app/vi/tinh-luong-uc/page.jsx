@@ -55,7 +55,7 @@ export default function Page() {
 
   return (
     <>
-      <SiteHeader langHref="/pay-calculator/" langLabel="English" />
+      <SiteHeader homeHref="/vi/" langHref="/pay-calculator/" langLabel="English" />
       <main className="wrap">
         <section className="hero">
           <div className="fy-chip">Cập nhật năm tài chính 2026–27</div>
