@@ -64,8 +64,10 @@ const PAPERWORK = [
     desc: 'Thu nhỏ ảnh chụp giấy tờ để vừa giới hạn upload của immi, Centrelink, ngân hàng.',
   },
   {
-    name: 'Gộp & Nén PDF',
-    desc: 'Gộp payslip, giấy tờ thành một file PDF nộp hồ sơ vay, visa. File không rời máy bạn.',
+    href: '/vi/gop-pdf/',
+    live: true,
+    name: 'Gộp PDF',
+    desc: 'Gộp payslip, giấy tờ và ảnh thành một file PDF nộp hồ sơ vay, visa. File không rời máy bạn.',
   },
   {
     name: 'Tạo CV Chuẩn Úc',

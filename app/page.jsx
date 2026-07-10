@@ -61,8 +61,10 @@ const PAPERWORK = [
     desc: 'Shrink photos and scans to fit upload limits for immi, Centrelink and bank portals.',
   },
   {
-    name: 'PDF Merge & Compress',
-    desc: 'Combine payslips and documents into one PDF for loan or visa applications. Files never leave your device.',
+    href: '/pdf-merger/',
+    live: true,
+    name: 'PDF Merger',
+    desc: 'Combine PDFs and photos into one file for loan or visa applications. Files never leave your device.',
   },
   {
     name: 'Australian CV Builder',
