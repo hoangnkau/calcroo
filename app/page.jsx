@@ -10,6 +10,12 @@ export const metadata = {
 
 const TOOLS = [
   {
+    href: '/tax-refund-calculator/',
+    live: true,
+    name: 'Tax Refund Calculator',
+    desc: 'Estimate your 2025\u201326 tax return before you lodge \u2014 refund or bill, at the correct rates.',
+  },
+  {
     href: '/income-tax-calculator/',
     live: true,
     name: 'Income Tax Calculator',

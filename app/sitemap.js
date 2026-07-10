@@ -7,6 +7,8 @@ export default function sitemap() {
     { url: `${base}/`, lastModified: now, priority: 1 },
     { url: `${base}/vi/`, lastModified: now, priority: 0.9 },
     { url: `${base}/income-tax-calculator/`, lastModified: now, priority: 0.9 },
+    { url: `${base}/tax-refund-calculator/`, lastModified: now, priority: 0.9 },
+    { url: `${base}/vi/tinh-hoan-thue-uc/`, lastModified: now, priority: 0.8 },
     { url: `${base}/pay-calculator/`, lastModified: now, priority: 0.9 },
     { url: `${base}/hecs-repayment-calculator/`, lastModified: now, priority: 0.9 },
     { url: `${base}/casual-pay-calculator/`, lastModified: now, priority: 0.9 },

@@ -13,6 +13,12 @@ export const metadata = {
 
 const TOOLS = [
   {
+    href: '/vi/tinh-hoan-thue-uc/',
+    live: true,
+    name: 'T\u00ednh Ho\u00e0n Thu\u1ebf',
+    desc: '\u01af\u1edbc t\u00ednh tax return 2025\u201326 tr\u01b0\u1edbc khi khai \u2014 \u0111\u01b0\u1ee3c ho\u00e0n hay ph\u1ea3i \u0111\u00f3ng th\u00eam.',
+  },
+  {
     href: '/vi/tinh-thue-thu-nhap-uc/',
     live: true,
     name: 'Tính Thuế Thu Nhập',
