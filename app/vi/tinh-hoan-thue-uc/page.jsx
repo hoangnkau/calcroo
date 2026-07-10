@@ -40,6 +40,14 @@ const FAQ = [
     q: 'Du học sinh về nước rồi có khai và nhận hoàn thuế được không?',
     a: 'Được. Nếu rời Úc hẳn trước 30/6, bạn có thể khai sớm (early lodgment), hoặc chờ khai online như thường từ 1/7. Tiền hoàn chuyển vào tài khoản bank Úc — nên giữ tài khoản mở đến khi nhận xong. Nhiều bạn về nước bỏ quên vài trăm đến cả nghìn đô tiền hoàn thuế và super — đừng nằm trong số đó.',
   },
+  {
+    q: 'Medicare levy surcharge là gì, tôi có bị không?',
+    a: 'Ngoài Medicare levy 2% tiêu chuẩn, người độc thân thu nhập trên khoảng $101.000 (2025\u201326) mà KHÔNG có bảo hiểm bệnh viện tư phải đóng thêm 1\u20131,5% trên toàn bộ thu nhập \u2014 tức $1.500 ở mức $120.000. Rất nhiều người dính sau khi tăng lương mà quên mua bảo hiểm. Bỏ tick \u201cbảo hiểm bệnh viện tư\u201d trong tùy chọn nâng cao để xem mức phơi nhiễm; ngưỡng trên là cho người độc thân, gia đình có ngưỡng cao hơn.',
+  },
+  {
+    q: 'Mới sang Úc giữa năm có được hưởng đủ ngưỡng miễn thuế $18.200 không?',
+    a: 'Không \u2014 ngưỡng bị chia theo tỷ lệ: $13.464 cộng $4.736 \u00d7 số tháng là resident \u00f7 12. Sang tháng 1 thì ngưỡng năm 2025\u201326 chỉ khoảng $15.832. Chọn số tháng trong tùy chọn nâng cao \u2014 hầu hết calculator bỏ qua quy tắc này nên ước tính hoàn dư cho người mới đến, đến lúc nhận notice of assessment mới ngã ngửa.',
+  },
 ];
 
 export default function Page() {
@@ -96,6 +104,15 @@ export default function Page() {
             định đúng 2025–26; các công cụ khác của Calcroo (tính lương, tính thuế hiện tại) dùng biểu 2026–27.
           </p>
 
+          <h2>Hai “cú điều chỉnh thầm lặng”: surcharge và part-year</h2>
+          <p>
+            Hai khoản khiến nhiều người bất ngờ nhất mùa thuế: <strong>Medicare levy surcharge</strong> —
+            thu nhập vượt ngưỡng mà không có bảo hiểm bệnh viện tư là đóng thêm 1–1,5% trên toàn bộ thu nhập;
+            và <strong>ngưỡng miễn thuế part-year</strong> — đến hoặc rời Úc giữa năm thì ngưỡng $18.200 bị thu nhỏ
+            theo tỷ lệ, nên người mới sang thường nợ thuế nhiều hơn calculator thông thường báo. Công cụ này tính cả
+            hai — mở “tùy chọn nâng cao” để dùng.
+          </p>
+
           <h2>Deductions người Việt hay bỏ sót</h2>
           <ul>
             <li><strong>Working-from-home:</strong> phương pháp fixed-rate tính theo giờ — cần ghi lại số giờ làm ở nhà (nhật ký, roster đều được).</li>
@@ -132,8 +149,7 @@ export default function Page() {
 
           <p className="disclaimer">
             Calcroo chỉ cung cấp ước tính tham khảo — không phải tư vấn thuế và không thay thế notice of assessment của
-            ATO. Ước tính chưa gồm Medicare levy surcharge, điều chỉnh bảo hiểm y tế tư nhân, capital gains và các
-            khoản giảm trừ khác. Khai chính thức qua myGov/myTax hoặc tax agent có đăng ký; đối chiếu tại{' '}
+            ATO. Ước tính dùng ngưỡng Medicare levy surcharge cho người độc thân (gia đình có ngưỡng riêng) và chưa gồm điều chỉnh bảo hiểm y tế tư nhân, capital gains và các khoản giảm trừ khác. Khai chính thức qua myGov/myTax hoặc tax agent có đăng ký; đối chiếu tại{' '}
             <a href="https://www.ato.gov.au" rel="noopener">ato.gov.au</a>.
           </p>
         </article>

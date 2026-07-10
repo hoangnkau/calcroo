@@ -40,6 +40,14 @@ const FAQ = [
     q: 'Is this estimate the same as my ATO notice of assessment?',
     a: 'No — it’s a close estimate for planning. Your actual assessment can differ due to private health insurance and the Medicare levy surcharge, other offsets, HELP add-backs like reportable super, capital gains, or ATO adjustments to prior debts. For the official figure, lodge via myTax or use a registered tax agent.',
   },
+  {
+    q: 'What is the Medicare levy surcharge, and will it hit me?',
+    a: 'On top of the standard 2% Medicare levy, singles earning above about $101,000 (2025–26) without private hospital cover pay an extra 1–1.5% surcharge on their income — $1,500 on $120,000. It catches people who got a pay rise and never bought cover. Untick “private hospital cover” in the advanced options to see your exposure; thresholds are for singles and rise for families.',
+  },
+  {
+    q: 'I moved to Australia partway through the year — do I get the full $18,200 tax-free threshold?',
+    a: 'No — the threshold is pro-rated: $13,464 plus $4,736 × months you were a resident ÷ 12. Arrive in January and your 2025–26 threshold is about $15,832, not $18,200. Set your resident months in the advanced options — most calculators ignore this and overstate refunds for new arrivals.',
+  },
 ];
 
 export default function Page() {
@@ -99,6 +107,15 @@ export default function Page() {
             incomes with any withholding often see the largest refunds relative to income.
           </div>
 
+          <h2>Surcharge and part-year rules: the two silent adjusters</h2>
+          <p>
+            Two items blindside more people than any others at tax time. The <strong>Medicare levy surcharge</strong>:
+            earn above the threshold without private hospital cover and an extra 1–1.5% applies to your whole income
+            — a $1,500 surprise at $120,000. And the <strong>part-year tax-free threshold</strong>: arrive or leave
+            Australia mid-year and your $18,200 threshold shrinks pro-rata, so new residents often owe more than a
+            standard calculator suggests. This estimator models both — open the advanced options.
+          </p>
+
           <h2>Deductions people forget</h2>
           <ul>
             <li><strong>Working-from-home:</strong> the fixed-rate method (cents per hour) needs a record of hours — a diary or roster works.</li>
@@ -135,8 +152,7 @@ export default function Page() {
 
           <p className="disclaimer">
             Calcroo provides estimates for general information only — not tax advice, and not a substitute for your ATO
-            assessment. Estimates exclude the Medicare levy surcharge, private health rebate adjustments, capital
-            gains, and other offsets or debts. Lodge via myGov/myTax or a registered tax agent; verify rates at{' '}
+            assessment. Estimates cover singles’ Medicare levy surcharge thresholds only (family thresholds differ) and exclude private health rebate adjustments, capital gains, and other offsets or debts. Surcharge thresholds should be confirmed against ato.gov.au. Lodge via myGov/myTax or a registered tax agent; verify rates at{' '}
             <a href="https://www.ato.gov.au" rel="noopener">ato.gov.au</a>.
           </p>
         </article>
