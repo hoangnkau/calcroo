@@ -58,6 +58,8 @@ const PAPERWORK = [
     desc: 'Crop và resize ảnh đúng chuẩn hộ chiếu/visa Úc 35×45mm — ngay trên trình duyệt.',
   },
   {
+    href: '/vi/nen-anh-giay-to/',
+    live: true,
     name: 'Nén Ảnh Giấy Tờ',
     desc: 'Thu nhỏ ảnh chụp giấy tờ để vừa giới hạn upload của immi, Centrelink, ngân hàng.',
   },

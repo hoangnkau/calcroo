@@ -55,6 +55,8 @@ const PAPERWORK = [
     desc: 'Crop and size photos to the Australian 35×45mm passport/visa standard — right in your browser.',
   },
   {
+    href: '/document-compressor/',
+    live: true,
     name: 'Document Compressor',
     desc: 'Shrink photos and scans to fit upload limits for immi, Centrelink and bank portals.',
   },

@@ -14,6 +14,8 @@ export default function sitemap() {
     { url: `${base}/casual-pay-calculator/`, lastModified: now, priority: 0.9 },
     { url: `${base}/salary-sacrifice-calculator/`, lastModified: now, priority: 0.9 },
     { url: `${base}/visa-photo-resizer/`, lastModified: now, priority: 0.9 },
+    { url: `${base}/document-compressor/`, lastModified: now, priority: 0.9 },
+    { url: `${base}/vi/nen-anh-giay-to/`, lastModified: now, priority: 0.8 },
     { url: `${base}/vi/chinh-anh-visa-uc/`, lastModified: now, priority: 0.8 },
     { url: `${base}/vi/tinh-salary-sacrifice/`, lastModified: now, priority: 0.8 },
     { url: `${base}/vi/tinh-luong-casual/`, lastModified: now, priority: 0.8 },
