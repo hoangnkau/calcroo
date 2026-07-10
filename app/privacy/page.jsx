@@ -11,6 +11,8 @@ export default function Page() {
         <p>Last updated: July 2026</p>
         <h2>The numbers you enter</h2>
         <p>All Calcroo calculators run entirely in your browser (client-side). The income and financial figures you type are processed on your device and are not transmitted to, or stored on, our servers.</p>
+        <h2>Photos and documents</h2>
+        <p>Our paperwork tools (photo resizing, document compression, PDF utilities) also run entirely in your browser. Files you select are read and processed locally on your device using browser APIs, and are never uploaded to, transmitted to, or stored on our servers. Closing the page discards them.</p>
         <h2>Analytics</h2>
         <p>We use privacy-respecting analytics to understand aggregate site usage (pages visited, approximate location by country/state, device type). This data does not include the figures you enter into calculators and is not used to identify you personally.</p>
         <h2>Advertising</h2>

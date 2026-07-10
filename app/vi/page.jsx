@@ -52,6 +52,8 @@ const FINANCE = [
 
 const PAPERWORK = [
   {
+    href: '/vi/chinh-anh-visa-uc/',
+    live: true,
     name: 'Chỉnh Ảnh Visa',
     desc: 'Crop và resize ảnh đúng chuẩn hộ chiếu/visa Úc 35×45mm — ngay trên trình duyệt.',
   },

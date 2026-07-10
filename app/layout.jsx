@@ -4,11 +4,11 @@ import { GA_ID } from '../lib/site';
 export const metadata = {
   metadataBase: new URL('https://calcroo.au'),
   title: {
-    default: 'Calcroo — Australian Tax & Pay Calculators',
+    default: 'Calcroo — Australian Tax, Pay & Paperwork Tools',
     template: '%s | Calcroo',
   },
   description:
-    'Free Australian tax and pay calculators, updated for FY 2026–27. Income tax, HECS-HELP, Medicare levy and take-home pay — fast, private, no sign-up.',
+    'Free Australian tax and pay calculators updated for FY 2026–27, plus paperwork tools for visas and applications. Fast, private, no sign-up — everything runs in your browser.',
   openGraph: {
     siteName: 'Calcroo',
     type: 'website',

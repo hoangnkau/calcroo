@@ -49,6 +49,8 @@ const FINANCE = [
 
 const PAPERWORK = [
   {
+    href: '/visa-photo-resizer/',
+    live: true,
     name: 'Visa Photo Resizer',
     desc: 'Crop and size photos to the Australian 35×45mm passport/visa standard — right in your browser.',
   },

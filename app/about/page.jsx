@@ -8,10 +8,10 @@ export default function Page() {
       <SiteHeader />
       <main className="wrap legal">
         <h1>About Calcroo</h1>
-        <p>Calcroo builds free, accurate calculators for tax and pay questions Australians actually ask — updated for each financial year from day one, starting with FY 2026–27.</p>
+        <p>Calcroo builds free tools for the money and paperwork questions Australians actually face: tax and pay calculators updated for each financial year from day one, and paperwork utilities — visa photos, document compression, PDFs — for the applications that go with them.</p>
         <h2>How we work</h2>
         <ul>
-          <li><strong>Client-side by design:</strong> every calculation runs in your browser. Your income and financial details are never sent to our servers — we don&apos;t have servers that store them.</li>
+          <li><strong>Client-side by design:</strong> every calculation runs in your browser, and so do our paperwork tools — the photos and documents you process never leave your device. We don&apos;t have servers that store them.</li>
           <li><strong>Sources you can check:</strong> our rates and thresholds are based on figures published by the Australian Taxation Office (ato.gov.au) and are reviewed against official sources before each financial year.</li>
           <li><strong>Plain answers:</strong> we show the full breakdown — tax, Medicare levy, HECS-HELP — not a single mystery number.</li>
         </ul>

@@ -13,6 +13,8 @@ export default function sitemap() {
     { url: `${base}/hecs-repayment-calculator/`, lastModified: now, priority: 0.9 },
     { url: `${base}/casual-pay-calculator/`, lastModified: now, priority: 0.9 },
     { url: `${base}/salary-sacrifice-calculator/`, lastModified: now, priority: 0.9 },
+    { url: `${base}/visa-photo-resizer/`, lastModified: now, priority: 0.9 },
+    { url: `${base}/vi/chinh-anh-visa-uc/`, lastModified: now, priority: 0.8 },
     { url: `${base}/vi/tinh-salary-sacrifice/`, lastModified: now, priority: 0.8 },
     { url: `${base}/vi/tinh-luong-casual/`, lastModified: now, priority: 0.8 },
     { url: `${base}/vi/tinh-tra-no-hecs/`, lastModified: now, priority: 0.8 },
