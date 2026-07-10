@@ -30,7 +30,12 @@ const TOOLS = [
     name: 'Tính Trả Nợ HECS',
     desc: 'Khoản trả bắt buộc, bao lâu trả hết nợ, và trả sớm tiết kiệm được bao nhiêu.',
   },
-  { name: 'Tính Lương Casual', desc: 'Casual loading, penalty rates và ngày lễ theo từng bang.' },
+  {
+    href: '/vi/tinh-luong-casual/',
+    live: true,
+    name: 'Tính Lương Casual',
+    desc: 'Casual loading, penalty cuối tuần/ngày lễ và số tuần làm thực tế.',
+  },
   { name: 'Tính Salary Sacrifice', desc: 'Đóng thêm super, tiết kiệm thuế và tác động lên HECS.' },
 ];
 

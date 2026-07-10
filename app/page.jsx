@@ -27,7 +27,12 @@ const TOOLS = [
     name: 'HECS Repayment Calculator',
     desc: 'Your compulsory repayment and payoff timeline under the marginal system.',
   },
-  { name: 'Casual Pay Calculator', desc: 'Casual loading, penalty rates and public holidays by state.' },
+  {
+    href: '/casual-pay-calculator/',
+    live: true,
+    name: 'Casual Pay Calculator',
+    desc: 'Casual loading, weekend & public holiday penalty rates, and real weeks worked.',
+  },
   { name: 'Salary Sacrifice Calculator', desc: 'Super contributions, tax savings and the HECS impact most tools miss.' },
 ];
 
