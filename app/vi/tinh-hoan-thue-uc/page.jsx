@@ -146,7 +146,7 @@ export default function Page() {
           ))}
 
           <p>
-            Muốn ước tính cho năm mới 2026–27? Chuyển bộ chọn năm trong công cụ, hoặc xem payslip hiện tại bằng{' '}
+            Khai lần đầu? Đọc <Link href="/vi/huong-dan/khai-thue-uc-2026/">hướng dẫn khai thuế 2026 từng bước</Link>. Muốn ước tính cho năm mới 2026–27? Chuyển bộ chọn năm trong công cụ, hoặc xem payslip hiện tại bằng{' '}
             <Link href="/vi/tinh-thue-thu-nhap-uc/">Tính Thuế Thu Nhập</Link> và{' '}
             <Link href="/vi/tinh-tra-no-hecs/">Tính Trả Nợ HECS</Link>.
           </p>

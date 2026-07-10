@@ -41,6 +41,7 @@ export function SiteFooter({ vi = false }) {
       <div className="wrap">
         <span>© {year} Calcroo · calcroo.au</span>
         <nav>
+          <Link href={vi ? '/vi/huong-dan/khai-thue-uc-2026/' : '/guides/tax-return-2026-australia/'}>{vi ? 'Hướng dẫn' : 'Guides'}</Link>
           <Link href="/about/">{vi ? 'Giới thiệu' : 'About'}</Link>
           <Link href="/privacy/">{vi ? 'Quyền riêng tư' : 'Privacy'}</Link>
           <Link href="/terms/">{vi ? 'Điều khoản' : 'Terms'}</Link>
