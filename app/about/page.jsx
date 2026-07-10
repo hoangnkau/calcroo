@@ -5,7 +5,7 @@ export const metadata = { title: 'About', description: 'About Calcroo — free A
 export default function Page() {
   return (
     <>
-      <SiteHeader />
+      <SiteHeader langHref="/vi/gioi-thieu/" langLabel="Tiếng Việt" />
       <main className="wrap legal">
         <h1>About Calcroo</h1>
         <p>Calcroo builds free tools for the money and paperwork questions Australians actually face: tax and pay calculators updated for each financial year from day one, and paperwork utilities — visa photos, document compression, PDFs — for the applications that go with them.</p>
