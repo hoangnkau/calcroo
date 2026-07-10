@@ -18,6 +18,8 @@ export default function sitemap() {
     { url: `${base}/pdf-merger/`, lastModified: now, priority: 0.9 },
     { url: `${base}/cv-builder/`, lastModified: now, priority: 0.9 },
     { url: `${base}/vi/tao-cv-uc/`, lastModified: now, priority: 0.8 },
+    { url: `${base}/guides/`, lastModified: now, priority: 0.7 },
+    { url: `${base}/vi/huong-dan/`, lastModified: now, priority: 0.7 },
     { url: `${base}/guides/tax-return-2026-australia/`, lastModified: now, priority: 0.8 },
     { url: `${base}/vi/huong-dan/khai-thue-uc-2026/`, lastModified: now, priority: 0.7 },
     { url: `${base}/vi/gop-pdf/`, lastModified: now, priority: 0.8 },

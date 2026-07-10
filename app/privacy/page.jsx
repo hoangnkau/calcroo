@@ -5,7 +5,7 @@ export const metadata = { title: 'Privacy Policy', description: 'Calcroo privacy
 export default function Page() {
   return (
     <>
-      <SiteHeader />
+      <SiteHeader langHref="/vi/bao-mat/" langLabel="Tiếng Việt" />
       <main className="wrap legal">
         <h1>Privacy Policy</h1>
         <p>Last updated: July 2026</p>

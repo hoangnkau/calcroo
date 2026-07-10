@@ -5,7 +5,7 @@ export const metadata = { title: 'Terms of Use', description: 'Calcroo terms of 
 export default function Page() {
   return (
     <>
-      <SiteHeader />
+      <SiteHeader langHref="/vi/dieu-khoan/" langLabel="Tiếng Việt" />
       <main className="wrap legal">
         <h1>Terms of Use</h1>
         <p>Last updated: July 2026</p>

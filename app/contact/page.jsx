@@ -5,7 +5,7 @@ export const metadata = { title: 'Contact', description: 'Contact Calcroo.', alt
 export default function Page() {
   return (
     <>
-      <SiteHeader />
+      <SiteHeader langHref="/vi/lien-he/" langLabel="Tiếng Việt" />
       <main className="wrap legal">
         <h1>Contact</h1>
         <p>Found a number that looks off, or a calculator you wish existed? We genuinely want to hear it — accuracy reports are answered first.</p>
