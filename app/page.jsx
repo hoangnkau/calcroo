@@ -121,6 +121,26 @@ export default function Home() {
           ))}
         </div>
 
+        <h2 className="tools-h">From the guides</h2>
+        <p className="tools-sub">Plain-English explainers that pair with the calculators — <Link href="/guides/">see all guides</Link>.</p>
+        <div className="tools-grid">
+          <Link href="/guides/tax-return-2026-australia/" className="tool-card">
+            <span className="live">Tax time 2026</span>
+            <h3>How to Lodge Your Tax Return in 2026</h3>
+            <p>Key dates, the myTax walkthrough, and what is different this year.</p>
+          </Link>
+          <Link href="/guides/tax-free-threshold/" className="tool-card">
+            <span className="live">Evergreen</span>
+            <h3>The Tax-Free Threshold, Explained</h3>
+            <p>Where to claim the $18,200 — and why the real zero-tax floor is ~$22,860.</p>
+          </Link>
+          <Link href="/guides/second-job-tax/" className="tool-card">
+            <span className="live">Two jobs</span>
+            <h3>Second Job Tax: The Myth and the Maths</h3>
+            <p>Job two isn’t taxed higher — but the threshold and HECS traps are real.</p>
+          </Link>
+        </div>
+
         <article className="content">
           <h2>Why Calcroo?</h2>
           <p>

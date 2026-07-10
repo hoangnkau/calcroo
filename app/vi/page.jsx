@@ -124,6 +124,26 @@ export default function HomeVi() {
           ))}
         </div>
 
+        <h2 className="tools-h">Bài hướng dẫn</h2>
+        <p className="tools-sub">Giải thích dễ hiểu, đi kèm đúng công cụ — <Link href="/vi/huong-dan/">xem tất cả</Link>.</p>
+        <div className="tools-grid">
+          <Link href="/vi/huong-dan/khai-thue-uc-2026/" className="tool-card">
+            <span className="live">Mùa thuế 2026</span>
+            <h3>Hướng Dẫn Khai Thuế Úc 2026 Cho Người Mới</h3>
+            <p>Mốc thời gian, 7 bước trên myTax, và năm nay có gì khác.</p>
+          </Link>
+          <Link href="/vi/huong-dan/nguong-mien-thue/" className="tool-card">
+            <span className="live">Kiến thức nền</span>
+            <h3>Ngưỡng Miễn Thuế $18.200, Nói Cho Dễ Hiểu</h3>
+            <p>Tick ở job nào — và vì sao sàn không-thuế thật là ~$22.860.</p>
+          </Link>
+          <Link href="/vi/huong-dan/lam-2-job-thue/" className="tool-card">
+            <span className="live">Làm 2 job</span>
+            <h3>Làm 2 Job: Giải Oan “Bị Đánh Thuế Cao”</h3>
+            <p>Job 2 không bị đánh cao hơn — nhưng bẫy threshold và HECS là thật.</p>
+          </Link>
+        </div>
+
         <article className="content">
           <h2>Vì sao có Calcroo?</h2>
           <p>

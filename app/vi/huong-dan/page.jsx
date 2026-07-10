@@ -10,6 +10,18 @@ export const metadata = {
 
 const GUIDES = [
   {
+    href: '/vi/huong-dan/nguong-mien-thue/',
+    tag: 'Kiến thức nền',
+    name: 'Ngưỡng Miễn Thuế $18.200, Nói Cho Dễ Hiểu',
+    desc: 'Tick ở job nào, vì sao sàn thật là ~$22.860, và quy tắc part-year cho người mới sang.',
+  },
+  {
+    href: '/vi/huong-dan/lam-2-job-thue/',
+    tag: 'Làm 2 job',
+    name: 'Làm 2 Job: Giải Oan Chuyện “Bị Đánh Thuế Cao”',
+    desc: 'Job 2 không bị đánh cao hơn — nhưng bẫy threshold và HECS là thật. Có ví dụ tính sẵn.',
+  },
+  {
     href: '/vi/huong-dan/khai-thue-uc-2026/',
     tag: 'Mùa thuế 2026',
     name: 'Hướng Dẫn Khai Thuế Úc 2026 Cho Người Mới',

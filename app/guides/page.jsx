@@ -10,6 +10,18 @@ export const metadata = {
 
 const GUIDES = [
   {
+    href: '/guides/tax-free-threshold/',
+    tag: 'Evergreen',
+    name: 'The Tax-Free Threshold, Explained',
+    desc: 'Where to claim the $18,200, why the real floor is ~$22,860, and the part-year rule.',
+  },
+  {
+    href: '/guides/second-job-tax/',
+    tag: 'Two jobs',
+    name: 'Second Job Tax: The Myth and the Maths',
+    desc: 'No, job two isn’t taxed higher — but the threshold and HECS traps are real. Worked examples.',
+  },
+  {
     href: '/guides/tax-return-2026-australia/',
     tag: 'Tax time 2026',
     name: 'How to Lodge Your Tax Return in 2026',
