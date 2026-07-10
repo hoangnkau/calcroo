@@ -1,6 +1,6 @@
 import { SiteHeader, SiteFooter } from '../../components/Site';
 
-export const metadata = { title: 'Privacy Policy', description: 'Calcroo privacy policy.', alternates: { canonical: '/privacy/' } };
+export const metadata = { title: 'Privacy Policy', description: 'Calcroo privacy policy.', alternates: { canonical: '/privacy/', languages: { en: '/privacy/', vi: '/vi/bao-mat/' } } };
 
 export default function Page() {
   return (

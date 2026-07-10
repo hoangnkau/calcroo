@@ -1,6 +1,6 @@
 import { SiteHeader, SiteFooter } from '../../components/Site';
 
-export const metadata = { title: 'About', description: 'About Calcroo — free Australian tax and pay calculators.', alternates: { canonical: '/about/' } };
+export const metadata = { title: 'About', description: 'About Calcroo — free Australian tax and pay calculators.', alternates: { canonical: '/about/', languages: { en: '/about/', vi: '/vi/gioi-thieu/' } } };
 
 export default function Page() {
   return (

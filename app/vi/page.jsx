@@ -136,7 +136,7 @@ export default function HomeVi() {
             Phiên bản tiếng Việt không phải bản dịch máy: nội dung viết riêng cho người Việt đang sống, học và làm
             việc tại Úc — từ chuyện TFN với ABN, khai thuế lần đầu, lương casual, đến bộ công cụ giấy tờ đã chạy đủ:
             chỉnh ảnh visa chuẩn 35×45mm, nén ảnh giấy tờ, gộp PDF và tạo CV chuẩn Úc. Muốn có công cụ nào tiếp theo?{' '}
-            <Link href="/contact/">Nhắn cho chúng tôi</Link>.
+            <Link href="/vi/lien-he/">Nhắn cho chúng tôi</Link>.
           </p>
         </article>
       </main>

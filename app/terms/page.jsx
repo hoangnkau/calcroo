@@ -1,6 +1,6 @@
 import { SiteHeader, SiteFooter } from '../../components/Site';
 
-export const metadata = { title: 'Terms of Use', description: 'Calcroo terms of use.', alternates: { canonical: '/terms/' } };
+export const metadata = { title: 'Terms of Use', description: 'Calcroo terms of use.', alternates: { canonical: '/terms/', languages: { en: '/terms/', vi: '/vi/dieu-khoan/' } } };
 
 export default function Page() {
   return (

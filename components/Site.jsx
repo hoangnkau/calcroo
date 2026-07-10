@@ -42,10 +42,10 @@ export function SiteFooter({ vi = false }) {
         <span>© {year} Calcroo · calcroo.au</span>
         <nav>
           <Link href={vi ? '/vi/huong-dan/khai-thue-uc-2026/' : '/guides/tax-return-2026-australia/'}>{vi ? 'Hướng dẫn' : 'Guides'}</Link>
-          <Link href="/about/">{vi ? 'Giới thiệu' : 'About'}</Link>
-          <Link href="/privacy/">{vi ? 'Quyền riêng tư' : 'Privacy'}</Link>
-          <Link href="/terms/">{vi ? 'Điều khoản' : 'Terms'}</Link>
-          <Link href="/contact/">{vi ? 'Liên hệ' : 'Contact'}</Link>
+          <Link href={vi ? '/vi/gioi-thieu/' : '/about/'}>{vi ? 'Giới thiệu' : 'About'}</Link>
+          <Link href={vi ? '/vi/bao-mat/' : '/privacy/'}>{vi ? 'Quyền riêng tư' : 'Privacy'}</Link>
+          <Link href={vi ? '/vi/dieu-khoan/' : '/terms/'}>{vi ? 'Điều khoản' : 'Terms'}</Link>
+          <Link href={vi ? '/vi/lien-he/' : '/contact/'}>{vi ? 'Liên hệ' : 'Contact'}</Link>
         </nav>
       </div>
     </footer>

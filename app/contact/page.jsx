@@ -1,6 +1,6 @@
 import { SiteHeader, SiteFooter } from '../../components/Site';
 
-export const metadata = { title: 'Contact', description: 'Contact Calcroo.', alternates: { canonical: '/contact/' } };
+export const metadata = { title: 'Contact', description: 'Contact Calcroo.', alternates: { canonical: '/contact/', languages: { en: '/contact/', vi: '/vi/lien-he/' } } };
 
 export default function Page() {
   return (
