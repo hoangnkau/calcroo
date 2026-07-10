@@ -67,6 +67,8 @@ const PAPERWORK = [
     desc: 'Combine PDFs and photos into one file for loan or visa applications. Files never leave your device.',
   },
   {
+    href: '/cv-builder/',
+    live: true,
     name: 'Australian CV Builder',
     desc: 'An ATS-friendly resume in the Australian format — no photo, no date of birth.',
   },

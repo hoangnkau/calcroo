@@ -168,3 +168,38 @@ select:focus{outline:none;border-color:var(--green)}
 .pm-btns button:hover:not(:disabled){border-color:var(--green);color:var(--green)}
 .pm-btns button:disabled{opacity:.35;cursor:default}
 .pm-btns .pm-x:hover{border-color:var(--danger);color:var(--danger)}
+
+/* ---------- cv builder ---------- */
+.cv-in{width:100%;padding:.6rem .8rem;font-family:var(--font-body);font-size:.9rem;
+  border:1.5px solid var(--line);border-radius:9px;background:var(--paper);color:var(--ink)}
+.cv-in:focus{outline:none;border-color:var(--green);background:#fff}
+textarea.cv-in{resize:vertical}
+.cv-block{border:1.5px solid var(--line);border-radius:10px;padding:.9rem .9rem .3rem;margin-bottom:.7rem}
+.cv-rm{background:none;border:none;color:var(--danger);font-size:.78rem;cursor:pointer;padding:.2rem 0;font-family:var(--font-display);font-weight:600}
+.cv-wrap{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;align-self:start}
+.cv-sheet{background:#fff;padding:1.4cm 1.5cm;font-family:Arial,Helvetica,sans-serif;color:#111;min-height:200px}
+.cv-name{font-size:22pt;font-weight:700;margin:0;font-family:Arial,Helvetica,sans-serif;letter-spacing:0}
+.cv-title{font-size:11pt;color:#333;margin-top:2pt}
+.cv-contact{font-size:9.5pt;color:#444;margin-top:4pt}
+.cv-h{font-size:11pt;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#111;
+  border-bottom:1.5px solid #222;padding-bottom:2pt;margin:14pt 0 6pt;font-family:Arial,Helvetica,sans-serif}
+.cv-p{font-size:10pt;line-height:1.45;margin:0;color:#222}
+.cv-job{margin-bottom:8pt}
+.cv-job-head{display:flex;justify-content:space-between;gap:12pt;font-size:10.5pt}
+.cv-job-head span:last-child{color:#555;white-space:nowrap;font-size:9.5pt}
+.cv-company{font-size:10pt;color:#444;margin:1pt 0 3pt}
+.cv-ul{margin:2pt 0 0 14pt;padding:0}
+.cv-ul li{font-size:10pt;line-height:1.4;color:#222;margin:1.5pt 0}
+@media(max-width:760px){.cv-grid{grid-template-columns:1fr}}
+
+/* ---------- print: chỉ in tờ CV ---------- */
+@media print{
+  body *{visibility:hidden}
+  .cv-sheet,.cv-sheet *{visibility:visible}
+  .cv-sheet{position:absolute;left:0;top:0;width:100%;padding:0;min-height:auto}
+  @page{size:A4;margin:1.4cm 1.5cm}
+}
+
+@media print{
+  .no-print,.no-print *{display:none!important}
+}

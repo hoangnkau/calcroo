@@ -70,6 +70,8 @@ const PAPERWORK = [
     desc: 'Gộp payslip, giấy tờ và ảnh thành một file PDF nộp hồ sơ vay, visa. File không rời máy bạn.',
   },
   {
+    href: '/vi/tao-cv-uc/',
+    live: true,
     name: 'Tạo CV Chuẩn Úc',
     desc: 'CV kiểu Úc thân thiện ATS — không ảnh, không ngày sinh.',
   },
