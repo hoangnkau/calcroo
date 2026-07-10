@@ -15,7 +15,12 @@ const TOOLS = [
     name: 'Income Tax Calculator',
     desc: 'Take-home pay, income tax, Medicare levy and HECS-HELP under the 2026–27 rates.',
   },
-  { name: 'Pay Calculator', desc: 'Convert annual, monthly, hourly and weekly pay — before and after tax.' },
+  {
+    href: '/pay-calculator/',
+    live: true,
+    name: 'Pay Calculator',
+    desc: 'Convert annual, monthly, hourly and weekly pay — before and after tax.',
+  },
   { name: 'HECS Repayment Calculator', desc: 'Your compulsory repayment and payoff timeline under the marginal system.' },
   { name: 'Casual Pay Calculator', desc: 'Casual loading, penalty rates and public holidays by state.' },
   { name: 'Salary Sacrifice Calculator', desc: 'Super contributions, tax savings and the HECS impact most tools miss.' },
