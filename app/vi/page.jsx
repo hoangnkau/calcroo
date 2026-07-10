@@ -4,19 +4,19 @@ import { SiteHeader, SiteFooter } from '../../components/Site';
 export const metadata = {
   title: 'Calcroo — Công Cụ Tính Thuế & Lương Ở Úc Miễn Phí (2026–27)',
   description:
-    'Bộ công cụ tính thuế, lương, HECS miễn phí cho người Việt tại Úc — cập nhật năm tài chính 2026–27. Không cần đăng ký, mọi tính toán chạy ngay trên trình duyệt.',
+    'Bộ công cụ tính thuế, lương, HECS, hoàn thuế miễn phí cho người Việt tại Úc — cập nhật năm tài chính 2026–27, kèm công cụ giấy tờ cho hồ sơ visa, vay. Không cần đăng ký.',
   alternates: {
     canonical: '/vi/',
     languages: { en: '/', vi: '/vi/' },
   },
 };
 
-const TOOLS = [
+const FINANCE = [
   {
     href: '/vi/tinh-hoan-thue-uc/',
     live: true,
-    name: 'T\u00ednh Ho\u00e0n Thu\u1ebf',
-    desc: '\u01af\u1edbc t\u00ednh tax return 2025\u201326 tr\u01b0\u1edbc khi khai \u2014 \u0111\u01b0\u1ee3c ho\u00e0n hay ph\u1ea3i \u0111\u00f3ng th\u00eam.',
+    name: 'Tính Hoàn Thuế',
+    desc: 'Ước tính tax return 2025–26 trước khi khai — được hoàn hay phải đóng thêm.',
   },
   {
     href: '/vi/tinh-thue-thu-nhap-uc/',
@@ -50,6 +50,41 @@ const TOOLS = [
   },
 ];
 
+const PAPERWORK = [
+  {
+    name: 'Chỉnh Ảnh Visa',
+    desc: 'Crop và resize ảnh đúng chuẩn hộ chiếu/visa Úc 35×45mm — ngay trên trình duyệt.',
+  },
+  {
+    name: 'Nén Ảnh Giấy Tờ',
+    desc: 'Thu nhỏ ảnh chụp giấy tờ để vừa giới hạn upload của immi, Centrelink, ngân hàng.',
+  },
+  {
+    name: 'Gộp & Nén PDF',
+    desc: 'Gộp payslip, giấy tờ thành một file PDF nộp hồ sơ vay, visa. File không rời máy bạn.',
+  },
+  {
+    name: 'Tạo CV Chuẩn Úc',
+    desc: 'CV kiểu Úc thân thiện ATS — không ảnh, không ngày sinh.',
+  },
+];
+
+function ToolCard({ t }) {
+  return t.live ? (
+    <Link href={t.href} className="tool-card">
+      <span className="live">Đang chạy</span>
+      <h3>{t.name}</h3>
+      <p>{t.desc}</p>
+    </Link>
+  ) : (
+    <div className="tool-card disabled">
+      <span className="soon">Sắp ra mắt</span>
+      <h3>{t.name}</h3>
+      <p>{t.desc}</p>
+    </div>
+  );
+}
+
 export default function HomeVi() {
   return (
     <>
@@ -65,22 +100,20 @@ export default function HomeVi() {
           </p>
         </section>
 
+        <h2 className="tools-h">Công cụ thuế &amp; lương</h2>
+        <p className="tools-sub">Đủ 6 công cụ theo biểu thuế 2026–27 — sẵn sàng cho mùa khai thuế 2026.</p>
         <div className="tools-grid">
-          {TOOLS.map((t) =>
-            t.live ? (
-              <Link key={t.name} href={t.href} className="tool-card">
-                <span className="live">Đang chạy</span>
-                <h3>{t.name}</h3>
-                <p>{t.desc}</p>
-              </Link>
-            ) : (
-              <div key={t.name} className="tool-card disabled">
-                <span className="soon">Sắp ra mắt</span>
-                <h3>{t.name}</h3>
-                <p>{t.desc}</p>
-              </div>
-            )
-          )}
+          {FINANCE.map((t) => (
+            <ToolCard key={t.name} t={t} />
+          ))}
+        </div>
+
+        <h2 className="tools-h">Công cụ giấy tờ</h2>
+        <p className="tools-sub">Tiện ích cho hồ sơ visa, vay, thủ tục — chạy trên trình duyệt, đang xây dựng.</p>
+        <div className="tools-grid">
+          {PAPERWORK.map((t) => (
+            <ToolCard key={t.name} t={t} />
+          ))}
         </div>
 
         <article className="content">
@@ -93,8 +126,8 @@ export default function HomeVi() {
           </p>
           <p>
             Phiên bản tiếng Việt không phải bản dịch máy: nội dung viết riêng cho người Việt đang sống, học và làm
-            việc tại Úc — từ chuyện TFN với ABN, resident thuế khác PR thế nào, đến lương casual và làm hai job. Muốn
-            có công cụ nào tiếp theo? <Link href="/contact/">Nhắn cho chúng tôi</Link>.
+            việc tại Úc — từ chuyện TFN với ABN, khai thuế lần đầu, đến lương casual và làm hai job. Muốn có công cụ
+            nào tiếp theo? <Link href="/contact/">Nhắn cho chúng tôi</Link>.
           </p>
         </article>
       </main>

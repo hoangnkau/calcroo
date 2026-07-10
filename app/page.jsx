@@ -4,16 +4,16 @@ import { SiteHeader, SiteFooter } from '../components/Site';
 export const metadata = {
   title: 'Calcroo — Free Australian Tax & Pay Calculators (FY 2026–27)',
   description:
-    'Free, fast Australian tax and pay calculators updated for FY 2026–27. Income tax, take-home pay, HECS-HELP and more — no sign-up, everything runs in your browser.',
+    'Free, fast Australian tax and pay calculators updated for FY 2026–27, plus paperwork tools for life admin. No sign-up, everything runs in your browser.',
   alternates: { canonical: '/', languages: { en: '/', vi: '/vi/' } },
 };
 
-const TOOLS = [
+const FINANCE = [
   {
     href: '/tax-refund-calculator/',
     live: true,
     name: 'Tax Refund Calculator',
-    desc: 'Estimate your 2025\u201326 tax return before you lodge \u2014 refund or bill, at the correct rates.',
+    desc: 'Estimate your 2025–26 tax return before you lodge — refund or bill, at the correct rates.',
   },
   {
     href: '/income-tax-calculator/',
@@ -47,6 +47,41 @@ const TOOLS = [
   },
 ];
 
+const PAPERWORK = [
+  {
+    name: 'Visa Photo Resizer',
+    desc: 'Crop and size photos to the Australian 35×45mm passport/visa standard — right in your browser.',
+  },
+  {
+    name: 'Document Compressor',
+    desc: 'Shrink photos and scans to fit upload limits for immi, Centrelink and bank portals.',
+  },
+  {
+    name: 'PDF Merge & Compress',
+    desc: 'Combine payslips and documents into one PDF for loan or visa applications. Files never leave your device.',
+  },
+  {
+    name: 'Australian CV Builder',
+    desc: 'An ATS-friendly resume in the Australian format — no photo, no date of birth.',
+  },
+];
+
+function ToolCard({ t }) {
+  return t.live ? (
+    <Link href={t.href} className="tool-card">
+      <span className="live">Live</span>
+      <h3>{t.name}</h3>
+      <p>{t.desc}</p>
+    </Link>
+  ) : (
+    <div className="tool-card disabled">
+      <span className="soon">Coming soon</span>
+      <h3>{t.name}</h3>
+      <p>{t.desc}</p>
+    </div>
+  );
+}
+
 export default function Home() {
   return (
     <>
@@ -61,22 +96,20 @@ export default function Home() {
           </p>
         </section>
 
+        <h2 className="tools-h">Tax &amp; pay calculators</h2>
+        <p className="tools-sub">All six updated for the 2026–27 financial year — and tax-time 2026 ready.</p>
         <div className="tools-grid">
-          {TOOLS.map((t) =>
-            t.live ? (
-              <Link key={t.name} href={t.href} className="tool-card">
-                <span className="live">Live</span>
-                <h3>{t.name}</h3>
-                <p>{t.desc}</p>
-              </Link>
-            ) : (
-              <div key={t.name} className="tool-card disabled">
-                <span className="soon">Coming soon</span>
-                <h3>{t.name}</h3>
-                <p>{t.desc}</p>
-              </div>
-            )
-          )}
+          {FINANCE.map((t) => (
+            <ToolCard key={t.name} t={t} />
+          ))}
+        </div>
+
+        <h2 className="tools-h">Paperwork tools</h2>
+        <p className="tools-sub">Life-admin utilities for visas, loans and applications — all client-side, in progress now.</p>
+        <div className="tools-grid">
+          {PAPERWORK.map((t) => (
+            <ToolCard key={t.name} t={t} />
+          ))}
         </div>
 
         <article className="content">
@@ -88,9 +121,9 @@ export default function Home() {
             device — every calculation happens locally in your browser.
           </p>
           <p>
-            We&apos;re starting with the calculations Australians look up most — income tax, take-home pay and
-            HECS-HELP — and adding new tools through 2026. Something you&apos;d like us to build?{' '}
-            <Link href="/contact/">Tell us</Link>.
+            We started with the calculations Australians look up most — income tax, take-home pay, HECS-HELP and tax
+            refunds — and we&apos;re now building the paperwork tools that go with them. Something you&apos;d like us
+            to build? <Link href="/contact/">Tell us</Link>.
           </p>
         </article>
       </main>
