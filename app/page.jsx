@@ -33,7 +33,12 @@ const TOOLS = [
     name: 'Casual Pay Calculator',
     desc: 'Casual loading, weekend & public holiday penalty rates, and real weeks worked.',
   },
-  { name: 'Salary Sacrifice Calculator', desc: 'Super contributions, tax savings and the HECS impact most tools miss.' },
+  {
+    href: '/salary-sacrifice-calculator/',
+    live: true,
+    name: 'Salary Sacrifice Calculator',
+    desc: 'Super contributions, tax savings and the HECS impact most tools miss.',
+  },
 ];
 
 export default function Home() {

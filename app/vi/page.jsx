@@ -36,7 +36,12 @@ const TOOLS = [
     name: 'Tính Lương Casual',
     desc: 'Casual loading, penalty cuối tuần/ngày lễ và số tuần làm thực tế.',
   },
-  { name: 'Tính Salary Sacrifice', desc: 'Đóng thêm super, tiết kiệm thuế và tác động lên HECS.' },
+  {
+    href: '/vi/tinh-salary-sacrifice/',
+    live: true,
+    name: 'Tính Salary Sacrifice',
+    desc: 'Đóng thêm super, tiết kiệm thuế và tác động lên HECS.',
+  },
 ];
 
 export default function HomeVi() {
