@@ -104,7 +104,7 @@ export default function Page() {
           <h2>Mind the concessional cap</h2>
           <p>
             The cap counts your employer’s 12% super guarantee <em>plus</em> your sacrificed amounts. On a $150,000
-            salary, employer super is already $18,000, leaving $12,000 of headroom under a $30,000 cap. Go over and the
+            salary, employer super is already $18,000, leaving $14,500 of headroom under a $32,500 cap. Go over and the
             excess is effectively taxed at your marginal rate — undoing the benefit. If your super balance is under
             $500,000, unused cap from the previous five years can be carried forward, which is the main legitimate way
             to contribute more in one year.

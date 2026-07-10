@@ -30,7 +30,7 @@ const FAQ = [
   },
   {
     q: 'Concessional cap là gì, vượt thì sao?',
-    a: 'Là trần đóng góp trước thuế mỗi năm, tính GỘP cả 12% chủ lao động đóng lẫn phần bạn sacrifice. Vượt trần thì phần vượt bị đánh thuế theo thuế suất biên — mất sạch lợi ích. Ví dụ lương $150.000: chủ đã đóng $18.000, bạn chỉ còn dư địa $12.000 với trần $30.000. Công cụ phía trên tự kiểm tra và cảnh báo.',
+    a: 'Là trần đóng góp trước thuế mỗi năm, tính GỘP cả 12% chủ lao động đóng lẫn phần bạn sacrifice. Vượt trần thì phần vượt bị đánh thuế theo thuế suất biên — mất sạch lợi ích. Ví dụ lương $150.000: chủ đã đóng $18.000, bạn chỉ còn dư địa $14.500 với trần $32.500. Công cụ phía trên tự kiểm tra và cảnh báo.',
   },
   {
     q: 'Thu nhập thấp có nên salary sacrifice không?',
@@ -104,7 +104,7 @@ export default function Page() {
           <p>
             Trần đóng trước thuế tính gộp <strong>12% chủ đóng + phần bạn sacrifice</strong>. Vượt trần, phần vượt chịu
             thuế suất biên — công cốc. Lương càng cao, dư địa càng hẹp: $150.000 lương thì chủ đã đóng $18.000, bạn chỉ
-            còn $12.000 trước trần $30.000. Nếu số dư super dưới $500.000, phần cap chưa dùng 5 năm trước có thể cộng
+            còn $14.500 trước trần $32.500. Nếu số dư super dưới $500.000, phần cap chưa dùng 5 năm trước có thể cộng
             dồn (carry-forward) — cách hợp lệ để đóng nhiều hơn trong một năm.
           </p>
 

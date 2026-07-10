@@ -99,8 +99,8 @@ export default function Page() {
           </div>
           <div className="example">
             <strong>$30/hour part-time (20h)</strong> — $31,200 a year. Tax is only $1,250 (after the low income tax
-            offset) and the Medicare levy is reduced to $398 under the low-income shade-in, leaving about{' '}
-            <strong>$29,552 a year</strong> or $568 a week. At lower incomes, a much bigger share of each dollar stays
+            offset) and the Medicare levy is reduced to $319 under the low-income shade-in, leaving about{' '}
+            <strong>$29,631 a year</strong> or $570 a week. At lower incomes, a much bigger share of each dollar stays
             with you.
           </div>
 

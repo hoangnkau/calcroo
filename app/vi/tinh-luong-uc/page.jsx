@@ -98,8 +98,8 @@ export default function Page() {
           </div>
           <div className="example">
             <strong>$30/giờ, part-time 20 giờ/tuần</strong> (phổ biến với du học sinh) — $31.200/năm. Nhờ ngưỡng miễn
-            thuế, LITO và giảm trừ Medicare levy cho thu nhập thấp, tổng thuế + levy chỉ khoảng $1.648 — thực nhận{' '}
-            <strong>$29.552/năm</strong>, tức $568/tuần. Thu nhập càng thấp, tỷ lệ giữ lại càng cao.
+            thuế, LITO và giảm trừ Medicare levy cho thu nhập thấp, tổng thuế + levy chỉ khoảng $1.569 — thực nhận{' '}
+            <strong>$29.631/năm</strong>, tức $570/tuần. Thu nhập càng thấp, tỷ lệ giữ lại càng cao.
           </div>
 
           <h2>Những bẫy lương người mới hay gặp</h2>
