@@ -48,6 +48,10 @@ const FAQ = [
     q: 'I moved to Australia partway through the year — do I get the full $18,200 tax-free threshold?',
     a: 'No — the threshold is pro-rated: $13,464 plus $4,736 × months you were a resident ÷ 12. Arrive in January and your 2025–26 threshold is about $15,832, not $18,200. Set your resident months in the advanced options — most calculators ignore this and overstate refunds for new arrivals.',
   },
+  {
+    q: 'I own some ASX shares — how do dividends and franking credits affect my refund?',
+    a: 'Dividends are income, but Australian franked dividends carry franking credits: the company tax already paid. Both the dividend and the credit are added to your taxable income, then the whole credit comes back as a refundable offset. At the 30% bracket a fully franked dividend is close to tax-neutral, and lower earners often get money back. Enter both figures from your dividend statements in the income breakdown.',
+  },
 ];
 
 export default function Page() {

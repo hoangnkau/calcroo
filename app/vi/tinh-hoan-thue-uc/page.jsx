@@ -48,6 +48,10 @@ const FAQ = [
     q: 'Mới sang Úc giữa năm có được hưởng đủ ngưỡng miễn thuế $18.200 không?',
     a: 'Không \u2014 ngưỡng bị chia theo tỷ lệ: $13.464 cộng $4.736 \u00d7 số tháng là resident \u00f7 12. Sang tháng 1 thì ngưỡng năm 2025\u201326 chỉ khoảng $15.832. Chọn số tháng trong tùy chọn nâng cao \u2014 hầu hết calculator bỏ qua quy tắc này nên ước tính hoàn dư cho người mới đến, đến lúc nhận notice of assessment mới ngã ngửa.',
   },
+  {
+    q: 'Tôi có ít cổ phiếu ASX — cổ tức và franking credits ảnh hưởng gì đến tiền hoàn?',
+    a: 'Cổ tức là thu nhập, nhưng cổ tức franked của công ty Úc đi kèm franking credits — phần thuế công ty đã nộp hộ. Cả cổ tức lẫn credits đều cộng vào thu nhập chịu thuế, sau đó TOÀN BỘ credits được hoàn lại như một khoản offset. Ở bậc thuế 30%, cổ tức fully franked gần như hòa; thu nhập thấp hơn thường được hoàn thêm. Nhập cả hai số từ dividend statement vào bảng chi tiết thu nhập.',
+  },
 ];
 
 export default function Page() {

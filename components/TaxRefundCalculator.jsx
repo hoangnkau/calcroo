@@ -11,6 +11,19 @@ const STRINGS = {
     yearLbl: 'Income year',
     yearHint: 'Lodging now (July 2026)? That is your 2025-26 return. Pick 2026-27 to plan ahead.',
     incomeLbl: 'Total income (salary, interest, etc.)',
+    incHint: 'Enter a total, or open the breakdown below to itemise.',
+    incAutoHint: 'Auto-summed from your breakdown below.',
+    incTitle: 'Itemise income',
+    iSalary: 'Salary & wages — main job',
+    iJob2: 'Second job / other salary',
+    iInterest: 'Bank interest',
+    iDiv: 'Dividends received',
+    iFrank: 'Franking credits (from dividend statements)',
+    iFrankHint: 'Grossed up into income, then refunded as a credit — often turns share income into extra refund.',
+    iBiz: 'Business / side-gig net income (ABN)',
+    iOtherInc: 'Other income (net rent, capital gains after discount, taxable Centrelink...)',
+    incTotal: 'Income total',
+    lFrank: 'Franking credits offset',
     dedLbl: 'Total deductions',
     dedHint: 'Enter a total, or open the breakdown below to itemise.',
     dedAutoHint: 'Auto-summed from your breakdown below.',
@@ -59,6 +72,19 @@ const STRINGS = {
     yearLbl: 'Năm thu nhập',
     yearHint: 'Khai bây giờ (tháng 7/2026) tức là khai cho năm 2025-26. Chọn 2026-27 nếu muốn ước tính trước.',
     incomeLbl: 'Tổng thu nhập (lương, lãi bank...)',
+    incHint: 'Nhập tổng, hoặc mở bảng bên dưới để tính chi tiết.',
+    incAutoHint: 'Tự cộng từ bảng chi tiết bên dưới.',
+    incTitle: 'Tính chi tiết thu nhập',
+    iSalary: 'Lương — job chính',
+    iJob2: 'Job thứ hai / lương khác',
+    iInterest: 'Lãi ngân hàng',
+    iDiv: 'Cổ tức nhận được',
+    iFrank: 'Franking credits (trên dividend statement)',
+    iFrankHint: 'Được cộng vào thu nhập rồi hoàn lại như một khoản credit — thường biến thu nhập cổ phiếu thành tiền hoàn thêm.',
+    iBiz: 'Thu nhập ròng ABN / side gig',
+    iOtherInc: 'Thu nhập khác (tiền thuê nhà ròng, capital gains sau discount, Centrelink chịu thuế...)',
+    incTotal: 'Tổng thu nhập',
+    lFrank: 'Hoàn franking credits',
     dedLbl: 'Tổng deductions (khoản khấu trừ)',
     dedHint: 'Nhập tổng, hoặc mở bảng bên dưới để tính chi tiết.',
     dedAutoHint: 'Tự cộng từ bảng chi tiết bên dưới.',
@@ -123,6 +149,14 @@ export default function TaxRefundCalculator({ lang = 'en' }) {
   const t = STRINGS[lang];
   const [fy, setFy] = useState('2025-26');
   const [income, setIncome] = useState('75,000');
+  const [itemiseInc, setItemiseInc] = useState(false);
+  const [iSalary, setISalary] = useState('75,000');
+  const [iJob2, setIJob2] = useState('');
+  const [iInterest, setIInterest] = useState('');
+  const [iDiv, setIDiv] = useState('');
+  const [iFrank, setIFrank] = useState('');
+  const [iBiz, setIBiz] = useState('');
+  const [iOtherInc, setIOtherInc] = useState('');
   const [dedTotal, setDedTotal] = useState('1,500');
   const [itemise, setItemise] = useState(false);
   const [wfhHours, setWfhHours] = useState('');
@@ -140,6 +174,10 @@ export default function TaxRefundCalculator({ lang = 'en' }) {
   const [mlMode, setMlMode] = useState('full');
   const [hasCover, setHasCover] = useState(false);
 
+  const frankCr = itemiseInc ? num(iFrank) : 0;
+  const incSum = num(iSalary) + num(iJob2) + num(iInterest) + num(iDiv) + frankCr + num(iBiz) + num(iOtherInc);
+  const incomeVal = itemiseInc ? incSum : num(income);
+
   const wfhDed = num(wfhHours) * ((num(wfhRate) || 70) / 100);
   const itemSum = wfhDed + num(dCar) + num(dCloth) + num(dTools) + num(dGifts) + num(dAgent) + num(dOther);
   const ded = itemise ? itemSum : num(dedTotal);
@@ -155,9 +193,9 @@ export default function TaxRefundCalculator({ lang = 'en' }) {
     return { tax, ml, hc, mls, total: tax + ml + hc + mls };
   }
 
-  const taxable = Math.max(num(income) - ded, 0);
+  const taxable = Math.max(incomeVal - ded, 0);
   const L = liabilityAt(taxable);
-  const result = num(wh) - L.total;
+  const result = num(wh) + frankCr - L.total;
   const perK = L.total - liabilityAt(Math.max(taxable - 1000, 0)).total; // hoàn thêm chính xác cho $1.000 deduction kế tiếp
 
   const onMoney = (set) => (e) => {
@@ -189,9 +227,39 @@ export default function TaxRefundCalculator({ lang = 'en' }) {
           <label htmlFor="r-income">{t.incomeLbl}</label>
           <div className="money-input">
             <span>$</span>
-            <input type="text" id="r-income" inputMode="numeric" autoComplete="off" value={income} onChange={onMoney(setIncome)} />
+            <input
+              type="text" id="r-income" inputMode="numeric" autoComplete="off"
+              value={itemiseInc ? Math.round(incSum).toLocaleString('en-AU') : income}
+              onChange={onMoney(setIncome)}
+              readOnly={itemiseInc}
+              style={itemiseInc ? { background: 'var(--green-soft)', borderColor: 'var(--green)' } : {}}
+            />
           </div>
+          <div className="hint">{itemiseInc ? t.incAutoHint : t.incHint}</div>
         </div>
+
+        <details className="adv" onToggle={(e) => setItemiseInc(e.currentTarget.open)}>
+          <summary>{t.incTitle}</summary>
+          <MoneyRow id="r-isalary" label={t.iSalary} value={iSalary} onChange={onMoney(setISalary)} />
+          <MoneyRow id="r-ijob2" label={t.iJob2} value={iJob2} onChange={onMoney(setIJob2)} />
+          <MoneyRow id="r-iinterest" label={t.iInterest} value={iInterest} onChange={onMoney(setIInterest)} />
+          <MoneyRow id="r-idiv" label={t.iDiv} value={iDiv} onChange={onMoney(setIDiv)} />
+          <div className="field">
+            <label htmlFor="r-ifrank" style={{ fontSize: '.78rem' }}>{t.iFrank}</label>
+            <div className="money-input">
+              <span>$</span>
+              <input type="text" id="r-ifrank" inputMode="numeric" autoComplete="off" value={iFrank} onChange={onMoney(setIFrank)} />
+            </div>
+            <div className="hint">{t.iFrankHint}</div>
+          </div>
+          <MoneyRow id="r-ibiz" label={t.iBiz} value={iBiz} onChange={onMoney(setIBiz)} />
+          <MoneyRow id="r-iotherinc" label={t.iOtherInc} value={iOtherInc} onChange={onMoney(setIOtherInc)} />
+          <div className="hint" style={{ padding: '.6rem .9rem', border: '1.5px solid var(--green)', borderRadius: 9, color: 'var(--green)', fontWeight: 600 }}>
+            {t.incTotal}: {fmt(incSum)}
+          </div>
+        </details>
+
+        <div style={{ marginTop: '1.1rem' }} />
 
         <div className="field">
           <label htmlFor="r-ded">{t.dedLbl}</label>
@@ -324,6 +392,7 @@ export default function TaxRefundCalculator({ lang = 'en' }) {
             <span className="v" style={{ fontWeight: 600 }}>−{fmt(L.total)}</span>
           </div>
           <div className="line plus"><span className="k">{t.lWh}</span><span className="v">+{fmt(num(wh))}</span></div>
+          {frankCr > 0 && <div className="line plus"><span className="k">{t.lFrank}</span><span className="v">+{fmt(frankCr)}</span></div>}
           <div className="line total">
             <span className="k">{isRefund ? t.refund : isOwing ? t.owing : t.even}</span>
             <span className="v" style={{ color: isOwing ? 'var(--danger)' : 'var(--green)' }}>
