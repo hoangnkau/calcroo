@@ -75,6 +75,18 @@ const PAPERWORK = [
     name: 'Tạo CV Chuẩn Úc',
     desc: 'CV kiểu Úc thân thiện ATS — không ảnh, không ngày sinh.',
   },
+  {
+    href: '/vi/tach-pdf/',
+    live: true,
+    name: 'Tách PDF',
+    desc: 'Chỉ giữ những trang cần nộp từ sao kê, bản scan — hoặc xóa trang thừa.',
+  },
+  {
+    href: '/vi/tao-chu-ky/',
+    live: true,
+    name: 'Tạo Chữ Ký',
+    desc: 'Vẽ chữ ký và tải PNG nền trong suốt để chèn vào form, hợp đồng.',
+  },
 ];
 
 function ToolCard({ t }) {
@@ -117,7 +129,7 @@ export default function HomeVi() {
         </div>
 
         <h2 className="tools-h">Công cụ giấy tờ</h2>
-        <p className="tools-sub">Tiện ích cho hồ sơ visa, vay, thủ tục — chạy trên trình duyệt, đang xây dựng.</p>
+        <p className="tools-sub">Tiện ích cho hồ sơ visa, vay, thủ tục — miễn phí, chạy riêng tư ngay trên trình duyệt của bạn.</p>
         <div className="tools-grid">
           {PAPERWORK.map((t) => (
             <ToolCard key={t.name} t={t} />

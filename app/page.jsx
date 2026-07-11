@@ -72,6 +72,18 @@ const PAPERWORK = [
     name: 'Australian CV Builder',
     desc: 'An ATS-friendly resume in the Australian format — no photo, no date of birth.',
   },
+  {
+    href: '/pdf-splitter/',
+    live: true,
+    name: 'PDF Splitter',
+    desc: 'Keep only the pages you need from statements and scans — or drop the ones you don’t.',
+  },
+  {
+    href: '/signature-maker/',
+    live: true,
+    name: 'Signature Maker',
+    desc: 'Draw your signature and download a transparent PNG for forms and agreements.',
+  },
 ];
 
 function ToolCard({ t }) {
@@ -114,7 +126,7 @@ export default function Home() {
         </div>
 
         <h2 className="tools-h">Paperwork tools</h2>
-        <p className="tools-sub">Life-admin utilities for visas, loans and applications — all client-side, in progress now.</p>
+        <p className="tools-sub">Life-admin utilities for visas, loans and applications — all free, running privately in your browser.</p>
         <div className="tools-grid">
           {PAPERWORK.map((t) => (
             <ToolCard key={t.name} t={t} />
