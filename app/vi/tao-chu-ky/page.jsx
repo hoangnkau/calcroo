@@ -5,7 +5,7 @@ import Link from 'next/link';
 export const metadata = {
   title: 'Tạo Chữ Ký Online — Vẽ & Tải PNG Nền Trong Suốt, Miễn Phí',
   description:
-    'Vẽ chữ ký bằng ngón tay hoặc chuột rồi tải về PNG nền trong suốt để chèn vào hợp đồng thuê nhà, form, PDF. Miễn phí, ngay trên trình duyệt — không bao giờ upload.',
+    'Vẽ chữ ký hoặc upload ảnh chụp chữ ký thật để tự động tách nền giấy — tải về PNG nền trong suốt chèn vào hợp đồng, form, PDF. Miễn phí, ngay trên trình duyệt — không bao giờ upload.',
   alternates: {
     canonical: '/vi/tao-chu-ky/',
     languages: { en: '/signature-maker/', vi: '/vi/tao-chu-ky/' },
@@ -33,6 +33,10 @@ const FAQ = [
     q: 'Nên chọn bút màu gì?',
     a: 'Đen là mặc định an toàn, scan ra sạch. Xanh được chuộng vì nhìn rõ là chữ ký "mới thêm vào" chứ không phải photo lại — nhiều người thích vậy trên hợp đồng. Có sẵn cả hai.',
   },
+  {
+    q: 'Dùng ảnh chụp chữ ký thật thay vì vẽ được không?',
+    a: 'Được — chuyển sang tab “Từ ảnh chụp”. Ký bút mực đậm trên giấy trơn, chụp thẳng từ trên xuống dưới ánh sáng đều, công cụ tự tách nền giấy (khử được cả bóng đổ nhẹ), tự crop sát chữ ký và xuất PNG trong suốt. Có thanh chỉnh để tinh chỉnh nếu nét mảnh bị mất hoặc còn sót bóng.',
+  },
 ];
 
 export default function Page() {
@@ -50,8 +54,8 @@ export default function Page() {
           <div className="fy-chip">Client-side · không bao giờ upload</div>
           <h1>Tạo Chữ Ký Online</h1>
           <p>
-            Vẽ chữ ký, tải PNG nền trong suốt, đặt lên bất kỳ form hay hợp đồng nào — miễn phí, trên trình duyệt, và
-            chữ ký không bao giờ rời máy bạn.
+            Vẽ chữ ký — hoặc chụp chữ ký thật rồi để công cụ tự tách nền giấy — sau đó tải PNG trong suốt cho mọi form,
+            hợp đồng. Miễn phí, trên trình duyệt, không bao giờ upload.
           </p>
         </section>
 

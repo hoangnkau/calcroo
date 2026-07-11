@@ -82,7 +82,7 @@ const PAPERWORK = [
     href: '/signature-maker/',
     live: true,
     name: 'Signature Maker',
-    desc: 'Draw your signature and download a transparent PNG for forms and agreements.',
+    desc: 'Draw a signature — or extract one from a photo — as a transparent PNG for forms.',
   },
 ];
 

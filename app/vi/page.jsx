@@ -85,7 +85,7 @@ const PAPERWORK = [
     href: '/vi/tao-chu-ky/',
     live: true,
     name: 'Tạo Chữ Ký',
-    desc: 'Vẽ chữ ký và tải PNG nền trong suốt để chèn vào form, hợp đồng.',
+    desc: 'Vẽ chữ ký — hoặc tách nền từ ảnh chụp — thành PNG trong suốt cho form, hợp đồng.',
   },
 ];
 

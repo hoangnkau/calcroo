@@ -5,7 +5,7 @@ import Link from 'next/link';
 export const metadata = {
   title: 'Signature Maker — Draw & Download a Transparent PNG Signature, Free',
   description:
-    'Draw your signature with a finger or mouse and download it as a transparent PNG to drop into rental agreements, forms and PDFs. Free, in your browser — never uploaded.',
+    'Draw your signature — or upload a photo of your real one and remove the paper background automatically — then download a transparent PNG for agreements, forms and PDFs. Free, in your browser, never uploaded.',
   alternates: {
     canonical: '/signature-maker/',
     languages: { en: '/signature-maker/', vi: '/vi/tao-chu-ky/' },
@@ -33,6 +33,10 @@ const FAQ = [
     q: 'Which pen colour should I use?',
     a: 'Black is the safe default and scans cleanly. Blue is popular because it makes the signature visibly “added” rather than photocopied — some people prefer that on contracts. Both are provided.',
   },
+  {
+    q: 'Can I use a photo of my real signature instead of drawing?',
+    a: 'Yes — switch to the “From a photo” tab. Sign with a dark pen on plain paper, photograph it from directly above in even light, and the tool removes the paper background automatically (it even corrects mild shadows), trims to the signature and exports a transparent PNG. A slider fine-tunes the cut if strokes are faint or shadows linger.',
+  },
 ];
 
 export default function Page() {
@@ -50,8 +54,8 @@ export default function Page() {
           <div className="fy-chip">Client-side · never uploaded</div>
           <h1>Signature Maker</h1>
           <p>
-            Draw your signature, download a transparent PNG, drop it onto any form or agreement — free, in your
-            browser, and your signature never leaves your device.
+            Draw your signature — or photograph your real one and let the tool strip the paper background — then download a
+            transparent PNG for any form or agreement. Free, in your browser, never uploaded.
           </p>
         </section>
 
