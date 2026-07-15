@@ -80,8 +80,9 @@ export default function Page() {
             Most medium-to-large employers run resumes through an ATS first. The systems reward exactly what this
             builder produces: a single column, standard section headings, real text (never an image export), and plain
             bullet points. They also reward <strong>keywords from the job ad</strong> — mirror the ad&apos;s exact
-            terms for skills and systems in your bullets and skills line. Tailoring the summary and top bullets per
-            application takes five minutes and multiplies callbacks.
+            terms for skills and systems in your bullets and skills line. The builder above has a "Match a job ad"
+            panel: paste the ad, and it checks which key terms already appear in your CV so you know exactly what to
+            add. Tailoring the summary and top bullets per application takes five minutes and multiplies callbacks.
           </p>
 
           <h2>Bullet formula that works</h2>
@@ -103,12 +104,6 @@ export default function Page() {
             Landed the job? Work out your real take-home with the{' '}
             <Link href="/pay-calculator/">Pay Calculator</Link>, or compare a casual offer with the{' '}
             <Link href="/casual-pay-calculator/">Casual Pay Calculator</Link>.
-          </p>
-
-          <p>
-            Applying for a visa or other paperwork alongside your job search? Resize your photo to the correct{' '}
-            <Link href="/visa-photo-resizer/">Visa Photo Resizer</Link> specs, or shrink scanned documents with the{' '}
-            <Link href="/document-compressor/">Document Compressor</Link> before uploading.
           </p>
 
           <p className="disclaimer">

@@ -198,8 +198,17 @@ textarea.cv-in{resize:vertical}
   .cv-sheet,.cv-sheet *{visibility:visible}
   .cv-sheet{position:absolute;left:0;top:0;width:100%;padding:0;min-height:auto}
   @page{size:A4;margin:1.4cm 1.5cm}
+  .cv-job{break-inside:avoid;page-break-inside:avoid}
+  .cv-h{break-after:avoid;page-break-after:avoid}
 }
 
 @media print{
   .no-print,.no-print *{display:none!important}
 }
+
+/* ---------- cv keyword matcher ---------- */
+.kw-chip{display:inline-flex;align-items:center;gap:.3rem;font-size:.78rem;font-weight:600;
+  padding:.3rem .65rem;border-radius:20px;margin:.2rem .3rem .2rem 0}
+.kw-chip.ok{background:var(--green-soft);color:var(--green)}
+.kw-chip.miss{background:#fdf1da;color:#8a6508}
+.kw-score{font-family:var(--font-display);font-weight:700;font-size:1.4rem}

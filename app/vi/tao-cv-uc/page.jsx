@@ -80,8 +80,9 @@ export default function Page() {
             Đa số công ty vừa và lớn cho CV chạy qua ATS trước. Hệ thống này thưởng đúng thứ công cụ tạo ra: một cột,
             tiêu đề mục chuẩn, chữ thật (tuyệt đối không xuất dạng ảnh), gạch đầu dòng đơn giản. Nó cũng thưởng{' '}
             <strong>từ khóa lấy từ tin tuyển dụng</strong> — chép đúng thuật ngữ kỹ năng, phần mềm trong tin đăng vào
-            bullets và dòng kỹ năng của bạn. Chỉnh summary và vài bullet đầu cho từng đơn mất 5 phút, nhân đôi tỷ lệ
-            được gọi.
+            bullets và dòng kỹ năng của bạn. Công cụ phía trên có mục "So khớp với tin tuyển dụng": dán tin vào, nó
+            kiểm tra CV của bạn đã có từ khóa nào, còn thiếu từ nào. Chỉnh summary và vài bullet đầu cho từng đơn mất
+            5 phút, nhân đôi tỷ lệ được gọi.
           </p>
 
           <h2>Công thức bullet ăn điểm</h2>
