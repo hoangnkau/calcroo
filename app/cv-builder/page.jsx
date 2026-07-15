@@ -105,6 +105,12 @@ export default function Page() {
             <Link href="/casual-pay-calculator/">Casual Pay Calculator</Link>.
           </p>
 
+          <p>
+            Applying for a visa or other paperwork alongside your job search? Resize your photo to the correct{' '}
+            <Link href="/visa-photo-resizer/">Visa Photo Resizer</Link> specs, or shrink scanned documents with the{' '}
+            <Link href="/document-compressor/">Document Compressor</Link> before uploading.
+          </p>
+
           <p className="disclaimer">
             General guidance on common Australian resume conventions — expectations vary by industry and employer, so
             follow any specific application instructions. Your CV data is stored only in your own browser and is never
