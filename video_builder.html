@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Video Builder — Why Questions Channel</title>
+<script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+<style>
+  :root {
+    --bg: #0f1115;
+    --card: #171a21;
+    --accent: #5b8cff;
+    --accent-dim: #2c3a63;
+    --text: #e8eaf0;
+    --muted: #8a90a3;
+    --ok: #4ade80;
+    --warn: #fbbf24;
+    --err: #f87171;
+  }
+  * { box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    margin: 0;
+    padding: 32px 20px;
+    display: flex;
+    justify-content: center;
+  }
+  .wrap { max-width: 680px; width: 100%; }
+  h1 { font-size: 22px; margin-bottom: 4px; }
+  .sub { color: var(--muted); font-size: 14px; margin-bottom: 28px; }
+  .card {
+    background: var(--card);
+    border-radius: 14px;
+    padding: 20px 22px;
+    margin-bottom: 16px;
+    border: 1px solid #23262f;
+  }
+  .card h2 { font-size: 15px; margin: 0 0 12px 0; display:flex; align-items:center; gap:8px;}
+  .badge {
+    font-size: 11px;
+    background: var(--accent-dim);
+    color: var(--accent);
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-weight: 600;
+  }
+  .badge.optional { background: #2a2d38; color: var(--muted); }
+  label.filerow {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    border: 1px dashed #333747;
+    border-radius: 10px;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 13px;
+    transition: border-color .15s;
+  }
+  label.filerow:hover { border-color: var(--accent); }
+  label.filerow input { display: none; }
+  .status { color: var(--muted); font-size: 12px; }
+  .status.ok { color: var(--ok); }
+  select, input[type=range] { width: 100%; }
+  select {
+    background: #10131a; color: var(--text); border: 1px solid #333747;
+    border-radius: 8px; padding: 8px; font-size: 13px;
+  }
+  .row { display:flex; gap:12px; }
+  .row > div { flex:1; }
+  button#buildBtn {
+    width: 100%;
+    background: var(--accent);
+    color: white;
+    border: none;
+    padding: 14px;
+    border-radius: 10px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 8px;
+  }
+  button#buildBtn:disabled { background: #2c3346; color: var(--muted); cursor: not-allowed; }
+  #log {
+    background: #0a0c10;
+    border-radius: 10px;
+    padding: 12px 14px;
+    font-family: "SF Mono", Menlo, monospace;
+    font-size: 12px;
+    color: var(--muted);
+    height: 140px;
+    overflow-y: auto;
+    margin-top: 14px;
+    white-space: pre-wrap;
+  }
+  #progressBar {
+    height: 6px;
+    background: #23262f;
+    border-radius: 4px;
+    overflow: hidden;
+    margin-top: 10px;
+  }
+  #progressFill {
+    height: 100%;
+    width: 0%;
+    background: var(--accent);
+    transition: width .2s;
+  }
+  #result { display:none; text-align:center; margin-top: 16px; }
+  #result video { width: 100%; max-width: 260px; border-radius: 12px; margin-bottom: 12px; }
+  #downloadLink {
+    display: inline-block;
+    background: var(--ok);
+    color: #052e14;
+    font-weight: 700;
+    padding: 10px 22px;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 14px;
+  }
+  .hint { font-size: 12px; color: var(--muted); margin-top: 6px; line-height:1.5; }
+  code { background: #10131a; padding: 1px 5px; border-radius: 4px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎬 Video Builder</h1>
+  <div class="sub">Chọn file theo đúng quy ước — app tự dựng video có phụ đề, không cần chạy code.</div>
+
+  <div class="card">
+    <h2>1. Giọng đọc (narration) <span class="badge">bắt buộc</span></h2>
+    <label class="filerow">
+      <span id="audioLabel">Chọn file audio.mp3 (giọng đọc từ TTS)</span>
+      <input type="file" id="audioInput" accept="audio/*">
+    </label>
+  </div>
+
+  <div class="card">
+    <h2>2. Hình ảnh <span class="badge">bắt buộc</span></h2>
+    <label class="filerow">
+      <span id="imagesLabel">Chọn nhiều ảnh (001.png, 002.png, ...)</span>
+      <input type="file" id="imagesInput" accept="image/*" multiple>
+    </label>
+    <div class="hint">Ảnh sẽ được sắp xếp theo <b>tên file</b> — đặt tên 001, 002, 003... để đúng thứ tự xuất hiện trong video.</div>
+  </div>
+
+  <div class="card">
+    <h2>3. Nhạc nền <span class="badge optional">tùy chọn</span></h2>
+    <label class="filerow">
+      <span id="musicLabel">Chọn file music.mp3</span>
+      <input type="file" id="musicInput" accept="audio/*">
+    </label>
+  </div>
+
+  <div class="card">
+    <h2>4. Phụ đề <span class="badge optional">tùy chọn</span></h2>
+    <div class="row" style="margin-bottom:10px;">
+      <div>
+        <label style="font-size:13px; display:flex; align-items:center; gap:6px; cursor:pointer;">
+          <input type="radio" name="subMode" value="auto" id="subModeAuto" checked style="display:inline-block;width:auto;">
+          Tự động tạo phụ đề bằng AI (Whisper)
+        </label>
+      </div>
+    </div>
+    <div class="row" style="margin-bottom:10px;">
+      <div>
+        <label style="font-size:13px; display:flex; align-items:center; gap:6px; cursor:pointer;">
+          <input type="radio" name="subMode" value="file" id="subModeFile" style="display:inline-block;width:auto;">
+          Tôi có sẵn file .srt
+        </label>
+      </div>
+    </div>
+    <div class="row" style="margin-bottom:10px;">
+      <div>
+        <label style="font-size:13px; display:flex; align-items:center; gap:6px; cursor:pointer;">
+          <input type="radio" name="subMode" value="none" id="subModeNone" style="display:inline-block;width:auto;">
+          Không cần phụ đề
+        </label>
+      </div>
+    </div>
+    <label class="filerow" id="srtRow" style="display:none;">
+      <span id="srtLabel">Chọn file subtitles.srt</span>
+      <input type="file" id="srtInput" accept=".srt">
+    </label>
+    <div class="hint">Chế độ "Tự động" dùng AI Whisper chạy ngay trong trình duyệt để nghe file audio.mp3 và tự sinh phụ đề khớp thời gian — không cần chuẩn bị gì thêm. Model AI (~40MB) sẽ tải về ở lần chạy đầu tiên, hơi lâu (30-60s), các lần sau nhanh hơn vì trình duyệt đã lưu cache.</div>
+  </div>
+
+  <div class="card">
+    <h2>5. Định dạng video</h2>
+    <div class="row">
+      <div>
+        <label style="font-size:12px; color:var(--muted)">Khung hình</label>
+        <select id="formatSelect">
+          <option value="vertical">Dọc 1080x1920 (Shorts)</option>
+          <option value="horizontal">Ngang 1920x1080 (Video dài)</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <button id="buildBtn">Dựng video</button>
+  <div id="progressBar"><div id="progressFill"></div></div>
+  <div id="log">Sẵn sàng. Chọn audio + ảnh rồi bấm "Dựng video" — phụ đề sẽ tự sinh bằng AI (trừ khi bạn chọn chế độ khác ở mục 4).</div>
+
+  <div id="result">
+    <video id="previewVideo" controls></video><br>
+    <a id="downloadLink" download="output.mp4">⬇ Tải video</a>
+  </div>
+</div>
+
+<script type="module">
+  import { pipeline, env } from 'https://cdn.jsdelivr.net/npm/@xenova/transformers@2.17.2';
+  env.allowLocalModels = false;
+
+  let transcriberPromise = null;
+  function getTranscriber(onStatus) {
+    if (!transcriberPromise) {
+      transcriberPromise = pipeline('automatic-speech-recognition', 'Xenova/whisper-tiny.en', {
+        quantized: true,
+        progress_callback: (p) => {
+          if (p.status === 'progress' && onStatus) {
+            onStatus(`Đang tải model AI: ${p.file} (${Math.round(p.progress || 0)}%)`);
+          }
+        }
+      });
+    }
+    return transcriberPromise;
+  }
+
+  // Groups word-level timestamps into short readable subtitle cues (~6-8 words,
+  // or split earlier on a natural pause) and returns {start, end, text}[]
+  function groupWordsIntoCues(chunks, maxWords = 7, pauseGapSec = 0.6) {
+    const cues = [];
+    let current = [];
+    let lastEnd = null;
+    for (const c of chunks) {
+      const [start, end] = c.timestamp;
+      if (start == null || end == null) continue;
+      const gap = lastEnd !== null ? (start - lastEnd) : 0;
+      if (current.length && (current.length >= maxWords || gap > pauseGapSec)) {
+        cues.push({
+          start: current[0].timestamp[0],
+          end: current[current.length - 1].timestamp[1],
+          text: current.map(w => w.text.trim()).join(' ').trim()
+        });
+        current = [];
+      }
+      current.push(c);
+      lastEnd = end;
+    }
+    if (current.length) {
+      cues.push({
+        start: current[0].timestamp[0],
+        end: current[current.length - 1].timestamp[1],
+        text: current.map(w => w.text.trim()).join(' ').trim()
+      });
+    }
+    return cues;
+  }
+
+  window.transcribeAudioToCues = async function(audioFile, onStatus) {
+    onStatus && onStatus('Đang khởi tạo Whisper AI...');
+    const transcriber = await getTranscriber(onStatus);
+    const audioUrl = URL.createObjectURL(audioFile);
+    onStatus && onStatus('Đang nghe và nhận diện lời thoại...');
+    const output = await transcriber(audioUrl, {
+      chunk_length_s: 30,
+      stride_length_s: 5,
+      return_timestamps: 'word'
+    });
+    URL.revokeObjectURL(audioUrl);
+    const chunks = output.chunks || [];
+    const cues = groupWordsIntoCues(chunks);
+    onStatus && onStatus(`Đã tạo ${cues.length} dòng phụ đề tự động.`);
+    return cues;
+  };
+</script>
+
+<script>
+const { createFFmpeg, fetchFile } = FFmpeg;
+
+let audioFile = null, imageFiles = [], musicFile = null, srtFile = null;
+
+document.getElementById('audioInput').onchange = e => {
+  audioFile = e.target.files[0];
+  document.getElementById('audioLabel').textContent = audioFile ? '✅ ' + audioFile.name : 'Chọn file audio.mp3';
+};
+document.getElementById('imagesInput').onchange = e => {
+  imageFiles = Array.from(e.target.files).sort((a,b) => a.name.localeCompare(b.name));
+  document.getElementById('imagesLabel').textContent = imageFiles.length ? `✅ ${imageFiles.length} ảnh đã chọn` : 'Chọn nhiều ảnh';
+};
+document.getElementById('musicInput').onchange = e => {
+  musicFile = e.target.files[0];
+  document.getElementById('musicLabel').textContent = musicFile ? '✅ ' + musicFile.name : 'Chọn file music.mp3';
+};
+document.getElementById('srtInput').onchange = e => {
+  srtFile = e.target.files[0];
+  document.getElementById('srtLabel').textContent = srtFile ? '✅ ' + srtFile.name : 'Chọn file subtitles.srt';
+};
+
+function updateSubtitleModeUI() {
+  const mode = document.querySelector('input[name="subMode"]:checked').value;
+  document.getElementById('srtRow').style.display = (mode === 'file') ? 'flex' : 'none';
+}
+document.getElementById('subModeAuto').onchange = updateSubtitleModeUI;
+document.getElementById('subModeFile').onchange = updateSubtitleModeUI;
+document.getElementById('subModeNone').onchange = updateSubtitleModeUI;
+
+function log(msg) {
+  const el = document.getElementById('log');
+  el.textContent += '\n' + msg;
+  el.scrollTop = el.scrollHeight;
+}
+function setProgress(pct) {
+  document.getElementById('progressFill').style.width = pct + '%';
+}
+
+// Escapes text for safe use inside a single-quoted ffmpeg drawtext value.
+// Per ffmpeg's filtergraph escaping rules: a literal single quote inside a
+// '...'-wrapped value must be written as '\'' (close quote, escaped quote, reopen quote).
+function escapeDrawtextText(text) {
+  return String(text)
+    .replace(/\\/g, '\\\\')
+    .replace(/'/g, "'\\''");
+}
+
+// Parse SRT text into cue objects {start, end, text} (seconds)
+function parseSRT(text) {
+  const blocks = text.replace(/\r/g,'').trim().split(/\n\n+/);
+  const cues = [];
+  const toSec = (ts) => {
+    const [h,m,rest] = ts.split(':');
+    const [s,ms] = rest.split(',');
+    return (+h)*3600 + (+m)*60 + (+s) + (+ms)/1000;
+  };
+  for (const b of blocks) {
+    const lines = b.split('\n');
+    if (lines.length < 3) continue;
+    const timeLine = lines[1];
+    const [startStr, endStr] = timeLine.split('-->').map(s => s.trim());
+    const text = lines.slice(2).join(' ');
+    cues.push({ start: toSec(startStr), end: toSec(endStr), text });
+  }
+  return cues;
+}
+
+document.getElementById('buildBtn').onclick = async () => {
+  if (!audioFile || imageFiles.length === 0) {
+    alert('Cần ít nhất 1 file audio.mp3 và các ảnh.');
+    return;
+  }
+  const btn = document.getElementById('buildBtn');
+  btn.disabled = true;
+  document.getElementById('log').textContent = '';
+  setProgress(5);
+
+  try {
+    await runBuild(btn);
+  } catch (err) {
+    console.error(err);
+    log('❌ Lỗi: ' + (err && err.message ? err.message : String(err)));
+    log('Xem chi tiết trong Console của trình duyệt (F12) nếu cần.');
+  } finally {
+    btn.disabled = false;
+  }
+};
+
+async function runBuild(btn) {
+  const [W, H] = document.getElementById('formatSelect').value === 'vertical' ? [1080,1920] : [1920,1080];
+
+  log('Đang tải công cụ dựng video (lần đầu có thể mất 15-30s)...');
+  let durationSec = null;
+  const recentFFmpegLogs = [];
+  const ffmpeg = createFFmpeg({
+    log: false,
+    corePath: 'https://unpkg.com/@ffmpeg/core@0.11.0/dist/ffmpeg-core.js',
+  });
+  ffmpeg.setProgress(({ ratio }) => {
+    if (ratio >= 0 && ratio <= 1) setProgress(30 + Math.round(ratio * 60));
+  });
+  ffmpeg.setLogger(({ message }) => {
+    recentFFmpegLogs.push(message);
+    if (recentFFmpegLogs.length > 30) recentFFmpegLogs.shift();
+    const m = message.match(/Duration:\s(\d+):(\d+):(\d+\.\d+)/);
+    if (m && durationSec === null) {
+      durationSec = (+m[1]) * 3600 + (+m[2]) * 60 + (+m[3]);
+    }
+  });
+
+  await ffmpeg.load();
+  log('✅ Công cụ đã sẵn sàng.');
+  setProgress(20);
+
+  // Write inputs into ffmpeg's virtual filesystem
+  ffmpeg.FS('writeFile', 'audio.mp3', await fetchFile(audioFile));
+  for (let i = 0; i < imageFiles.length; i++) {
+    ffmpeg.FS('writeFile', `img${String(i).padStart(3,'0')}.png`, await fetchFile(imageFiles[i]));
+  }
+  if (musicFile) ffmpeg.FS('writeFile', 'music.mp3', await fetchFile(musicFile));
+  log(`Đã nạp: 1 audio, ${imageFiles.length} ảnh${musicFile ? ', 1 nhạc nền' : ''}${srtFile ? ', 1 phụ đề' : ''}.`);
+
+  // Get narration duration — the logger above already captured it from a probe run
+  await ffmpeg.run('-i', 'audio.mp3').catch(() => {}); // errors expected (no output), just to read duration from log
+  if (!durationSec) durationSec = 60; // fallback
+  log(`Thời lượng giọng đọc: ${durationSec.toFixed(1)}s`);
+
+  const perImage = durationSec / imageFiles.length;
+
+  // Build concat list for images, each shown for perImage seconds, with zoom (Ken Burns) via zoompan
+  let filterParts = [];
+  let inputs = [];
+  for (let i = 0; i < imageFiles.length; i++) {
+    inputs.push('-loop', '1', '-t', perImage.toFixed(3), '-r', '25', '-i', `img${String(i).padStart(3,'0')}.png`);
+    filterParts.push(
+      `[${i}:v]scale=${W}:${H}:force_original_aspect_ratio=increase,crop=${W}:${H},` +
+      `zoompan=z='min(zoom+0.0015,1.15)':d=1:s=${W}x${H}:fps=25[v${i}]`
+    );
+  }
+  const concatInputs = imageFiles.map((_, i) => `[v${i}]`).join('');
+  filterParts.push(`${concatInputs}concat=n=${imageFiles.length}:v=1:a=0[vout]`);
+
+  let finalVideoLabel = 'vout';
+
+  // Subtitles: burn in as timed drawtext chain (no libass dependency needed)
+  const subMode = document.querySelector('input[name="subMode"]:checked').value;
+  let cues = [];
+  if (subMode === 'auto') {
+    cues = await window.transcribeAudioToCues(audioFile, (msg) => log(msg));
+  } else if (subMode === 'file' && srtFile) {
+    const srtText = await srtFile.text();
+    cues = parseSRT(srtText);
+  }
+
+  if (cues.length) {
+    log('Đang tải font chữ cho phụ đề...');
+    const fontResp = await fetch('https://raw.githubusercontent.com/googlefonts/roboto/main/src/hinted/Roboto-Regular.ttf');
+    if (!fontResp.ok) throw new Error('Không tải được font chữ cho phụ đề.');
+    const fontData = new Uint8Array(await fontResp.arrayBuffer());
+    ffmpeg.FS('writeFile', 'font.ttf', fontData);
+
+    let vLabel = 'vout';
+    cues.forEach((cue, idx) => {
+      const outLabel = `sub${idx}`;
+      const safeText = escapeDrawtextText(cue.text);
+      filterParts.push(
+        `[${vLabel}]drawtext=fontfile=font.ttf:text='${safeText}':fontsize=${Math.round(W*0.045)}:fontcolor=white:` +
+        `borderw=3:bordercolor=black:x=(w-text_w)/2:y=h-${Math.round(H*0.14)}:` +
+        `enable='between(t\\,${cue.start.toFixed(2)}\\,${cue.end.toFixed(2)})'[${outLabel}]`
+      );
+      vLabel = outLabel;
+    });
+    finalVideoLabel = vLabel;
+    log(`Đã chèn ${cues.length} dòng phụ đề.`);
+  }
+
+  const filterComplex = filterParts.join(';');
+
+  const args = [...inputs, '-i', 'audio.mp3'];
+  const audioInputIndex = imageFiles.length;
+  let mapArgs = ['-map', `[${finalVideoLabel}]`, '-map', `${audioInputIndex}:a`];
+
+  if (musicFile) {
+    args.push('-i', 'music.mp3');
+    const musicIndex = audioInputIndex + 1;
+    const fadeDur = Math.min(3, Math.max(1, durationSec * 0.15));
+    const fadeStart = Math.max(0, durationSec - fadeDur);
+    filterParts.push(
+      `[${musicIndex}:a]aformat=sample_rates=44100:channel_layouts=stereo,` +
+      `afade=t=out:st=${fadeStart.toFixed(2)}:d=${fadeDur.toFixed(2)},` +
+      `volume=0.08[musicfaded]`
+    );
+    filterParts.push(`[${audioInputIndex}:a]aformat=sample_rates=44100:channel_layouts=stereo[narr]`);
+    filterParts.push(`[narr][musicfaded]amix=inputs=2:duration=first[aout]`);
+    mapArgs = ['-map', `[${finalVideoLabel}]`, '-map', '[aout]'];
+    log(`Nhạc nền sẽ giảm dần âm lượng trong ${fadeDur.toFixed(1)}s cuối video.`);
+  }
+
+  const finalFilterComplex = musicFile ? filterParts.join(';') : filterComplex;
+
+  log('Đang dựng video, vui lòng đợi...');
+  setProgress(30);
+
+  await ffmpeg.run(
+    ...args,
+    '-filter_complex', finalFilterComplex,
+    ...mapArgs,
+    '-t', durationSec.toFixed(3),
+    '-c:v', 'libx264', '-preset', 'ultrafast', '-crf', '23',
+    '-c:a', 'aac',
+    '-pix_fmt', 'yuv420p',
+    'output.mp4'
+  );
+
+  setProgress(95);
+
+  let data;
+  try {
+    data = ffmpeg.FS('readFile', 'output.mp4');
+  } catch (e) {
+    const tail = recentFFmpegLogs.slice(-8).join('\n');
+    throw new Error(
+      `Video không được tạo ra — ffmpeg gặp lỗi khi dựng.\n--- Log ffmpeg gần nhất ---\n${tail || '(không có log)'}`
+    );
+  }
+  log('✅ Hoàn tất!');
+  const blob = new Blob([data.buffer], { type: 'video/mp4' });
+  const url = URL.createObjectURL(blob);
+
+  document.getElementById('previewVideo').src = url;
+  document.getElementById('downloadLink').href = url;
+  document.getElementById('result').style.display = 'block';
+  setProgress(100);
+}
+</script>
+</body>
+</html>
