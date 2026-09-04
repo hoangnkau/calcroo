@@ -257,3 +257,76 @@ textarea.cv-in{resize:vertical}
 .dash-fields-note{font-size:.74rem;color:var(--muted);margin-top:.2rem}
 .dash-edit .dash-actions{margin-top:.4rem}
 .dash-edit .btn-primary,.dash-edit .btn-secondary{width:auto;padding:.5rem 1rem}
+
+/* ---------- pay calculator: compare mode ---------- */
+.pay-mode-bar{display:flex;justify-content:flex-end;margin-bottom:1rem}
+.pay-mode-btn{width:auto;padding:.6rem 1.1rem}
+.pay-mode-btn.active{background:var(--green-soft)}
+.pay-compare-cols{display:grid;grid-template-columns:1fr 1fr;gap:1.4rem;align-items:start}
+@media(max-width:760px){.pay-compare-cols{grid-template-columns:1fr}}
+.pay-col h2{display:flex;align-items:center;gap:.5rem}
+.pay-col h2::before{content:"";width:10px;height:10px;border-radius:3px;background:var(--green);flex-shrink:0}
+.pay-col:nth-of-type(2) h2::before{background:var(--wattle)}
+.cmp-panel{margin-top:1.4rem;position:static}
+.cmp-summary{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;padding:1.1rem 1.5rem;border-bottom:1px dashed var(--line)}
+.cmp-summary>div{display:flex;flex-direction:column;gap:.15rem}
+.cmp-summary-lbl{font-size:.72rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.cmp-summary strong{font-family:var(--font-mono);font-size:1.3rem;font-weight:600;color:var(--green)}
+.cmp-summary strong.j2{color:#b9860b}
+.cmp-summary small{font-size:.72rem;color:var(--muted)}
+.cmp-chart-wrap{padding:1.1rem 1rem .4rem}
+.cmp-deltas .line .v{font-family:var(--font-mono);font-weight:600}
+
+/* ---------- pay compare chart (pure SVG) ---------- */
+.cmp-chart{width:100%;height:auto;display:block;font-family:var(--font-body)}
+.cmp-chart .cmp-grid line{stroke:var(--line);stroke-width:1}
+.cmp-chart .cmp-grid text{fill:var(--muted)}
+.cmp-chart .cmp-legend text{fill:var(--ink)}
+.cmp-chart .cmp-cat{fill:var(--ink);font-weight:600}
+.cmp-chart .cmp-bar-val{fill:var(--muted);font-family:var(--font-mono)}
+.cmp-chart .cmp-swatch-1,.cmp-chart .cmp-bar-1{fill:var(--green)}
+.cmp-chart .cmp-swatch-2,.cmp-chart .cmp-bar-2{fill:var(--wattle)}
+.cmp-chart .cmp-bar{transition:height .35s cubic-bezier(.4,0,.2,1),y .35s cubic-bezier(.4,0,.2,1)}
+@media(prefers-reduced-motion:reduce){.cmp-chart .cmp-bar{transition:none}}
+
+/* ---------- range slider ---------- */
+.slider-head{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:.5rem}
+.slider-value{font-family:var(--font-mono);font-size:1.25rem;font-weight:600;color:var(--green)}
+.slider-unit{font-size:.8rem;color:var(--muted);font-weight:400}
+.slider-sub{font-size:.78rem;color:var(--muted);font-family:var(--font-mono)}
+.range{-webkit-appearance:none;appearance:none;width:100%;height:8px;border-radius:99px;outline:none;
+  background:linear-gradient(90deg,var(--green) 0%,var(--green) var(--pct,0%),var(--line) var(--pct,0%),var(--line) 100%);
+  transition:background .12s linear}
+.range::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:22px;height:22px;border-radius:50%;
+  background:#fff;border:3px solid var(--green);cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.18);
+  transition:transform .12s ease}
+.range::-webkit-slider-thumb:active{transform:scale(1.12)}
+.range::-moz-range-thumb{width:20px;height:20px;border-radius:50%;background:#fff;border:3px solid var(--green);
+  cursor:pointer;box-shadow:0 1px 4px rgba(0,0,0,.18)}
+.range::-moz-range-track{height:8px;border-radius:99px;background:transparent}
+.range:focus-visible{box-shadow:0 0 0 3px var(--wattle-soft)}
+.slider-scale{display:flex;justify-content:space-between;font-size:.7rem;color:var(--muted);
+  font-family:var(--font-mono);margin-top:.35rem}
+
+/* ---------- hecs payoff timeline ---------- */
+.hecs-track{margin:.55rem 0}
+.hecs-track-row{display:flex;justify-content:space-between;gap:1rem;font-size:.86rem;margin-bottom:.3rem}
+.hecs-track-lbl{color:var(--muted)}
+.hecs-track-val{font-family:var(--font-mono);font-weight:600}
+.hecs-bar-rail{height:12px;border-radius:99px;background:var(--paper);border:1px solid var(--line);overflow:hidden}
+.hecs-bar{height:100%;border-radius:99px;transition:width .4s cubic-bezier(.4,0,.2,1)}
+.hecs-bar-base{background:var(--line);background:repeating-linear-gradient(45deg,#d7ddd7,#d7ddd7 6px,#e4e9e4 6px,#e4e9e4 12px)}
+.hecs-bar-boost{background:var(--green)}
+@media(prefers-reduced-motion:reduce){.hecs-bar{transition:none}}
+
+/* ---------- monetization slot (ETF affiliate — UI only) ---------- */
+.etf-slot{margin:0;padding:1.1rem 1.5rem 1.3rem;background:var(--wattle-soft);border-top:1px dashed var(--line)}
+.etf-slot-tag{display:inline-block;font-family:var(--font-mono);font-size:.66rem;font-weight:600;letter-spacing:.06em;
+  text-transform:uppercase;color:#8a6508;background:#fff;padding:.15rem .5rem;border-radius:5px;margin-bottom:.5rem}
+.etf-slot-title{font-family:var(--font-display);font-weight:700;font-size:.98rem;color:var(--ink);margin-bottom:.3rem}
+.etf-slot-body{font-size:.82rem;color:#5a4a1e;line-height:1.5}
+.etf-slot-foot{display:flex;align-items:center;gap:.7rem;flex-wrap:wrap;margin-top:.8rem}
+.etf-slot-foot .btn-secondary{width:auto;padding:.5rem 1rem;opacity:.6;cursor:not-allowed}
+.etf-slot-soon{font-family:var(--font-mono);font-size:.68rem;font-weight:600;text-transform:uppercase;
+  letter-spacing:.05em;color:#8a6508}
+.etf-slot-disc{font-size:.72rem;color:var(--muted)}
