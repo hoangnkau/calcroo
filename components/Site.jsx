@@ -42,6 +42,7 @@ export function SiteFooter({ vi = false }) {
         <span>© {year} Calcroo · calcroo.au</span>
         <nav>
           <Link href={vi ? '/' : '/vi/'}>{vi ? 'English' : 'Tiếng Việt'}</Link>
+          <Link href={vi ? '/dashboard/?lang=vi' : '/dashboard/'}>{vi ? 'Bảng điều khiển' : 'Dashboard'}</Link>
           <Link href={vi ? '/vi/huong-dan/' : '/guides/'}>{vi ? 'Hướng dẫn' : 'Guides'}</Link>
           <Link href={vi ? '/vi/gioi-thieu/' : '/about/'}>{vi ? 'Giới thiệu' : 'About'}</Link>
           <Link href={vi ? '/vi/bao-mat/' : '/privacy/'}>{vi ? 'Quyền riêng tư' : 'Privacy'}</Link>

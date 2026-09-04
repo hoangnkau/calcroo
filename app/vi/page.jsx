@@ -126,6 +126,11 @@ export default function HomeVi() {
           {FINANCE.map((t) => (
             <ToolCard key={t.name} t={t} />
           ))}
+          <Link href="/dashboard/?lang=vi" className="tool-card">
+            <span className="live">Bảng điều khiển</span>
+            <h3>Bản tính đã lưu</h3>
+            <p>Lưu mọi cấu hình chỉ với một chạm và quản lý lịch sử tính toán — lưu riêng tư trên trình duyệt, không cần đăng ký.</p>
+          </Link>
         </div>
 
         <h2 className="tools-h">Công cụ giấy tờ</h2>

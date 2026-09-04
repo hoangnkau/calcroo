@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FY, incomeTax, lito, medicare, hecs } from '../lib/tax';
+import SaveConfig from './SaveConfig';
 
 const STRINGS = {
   en: {
@@ -140,6 +141,21 @@ export default function PayCalculator({ lang = 'en' }) {
             </div>
           </label>
         </div>
+
+        <SaveConfig
+          tool="pay"
+          lang={lang}
+          getInputs={() => ({ raw, period, hours, withHecs, withMl })}
+          summarise={(i) => `${i.period === 'hour' ? '$' + i.raw + '/hr · ' + i.hours + 'h/wk' : '$' + i.raw + '/' + i.period}${i.withHecs ? ' · HECS' : ''}`}
+          suggestName={() => `${lang === 'vi' ? 'Lương' : 'Pay'} · ${period === 'hour' ? '$' + raw + '/h' : '$' + raw + '/' + period}`}
+          onRestore={(i) => {
+            if (i.raw != null) setRaw(String(i.raw));
+            if (i.period) setPeriod(i.period);
+            if (i.hours != null) setHours(String(i.hours));
+            if (i.withHecs != null) setWithHecs(!!i.withHecs);
+            if (i.withMl != null) setWithMl(!!i.withMl);
+          }}
+        />
       </div>
 
       <div className="payslip" aria-live="polite">

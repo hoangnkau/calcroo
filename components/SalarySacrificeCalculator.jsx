@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FY, incomeTax, lito, medicare, hecs, SUPER } from '../lib/tax';
+import SaveConfig from './SaveConfig';
 
 const STRINGS = {
   en: {
@@ -134,6 +135,19 @@ export default function SalarySacrificeCalculator({ lang = 'en' }) {
             ? t.capOver(fmt(overCap))
             : t.capOk(fmt(capUsed), fmt(SUPER.concessionalCap))}
         </div>
+
+        <SaveConfig
+          tool="salary-sacrifice"
+          lang={lang}
+          getInputs={() => ({ salary, sac, withHecs })}
+          summarise={(i) => `$${i.salary} salary · $${i.sac} sacrificed${i.withHecs ? ' · HECS' : ''}`}
+          suggestName={() => `Salary sacrifice · $${sac}`}
+          onRestore={(i) => {
+            if (i.salary != null) setSalary(String(i.salary));
+            if (i.sac != null) setSac(String(i.sac));
+            if (i.withHecs != null) setWithHecs(!!i.withHecs);
+          }}
+        />
       </div>
 
       <div className="payslip" aria-live="polite">

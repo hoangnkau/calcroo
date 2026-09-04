@@ -123,6 +123,11 @@ export default function Home() {
           {FINANCE.map((t) => (
             <ToolCard key={t.name} t={t} />
           ))}
+          <Link href="/dashboard/" className="tool-card">
+            <span className="live">Your dashboard</span>
+            <h3>Saved calculations</h3>
+            <p>Save any setup with one tap and manage your history — stored privately in your browser, no sign-up.</p>
+          </Link>
         </div>
 
         <h2 className="tools-h">Paperwork tools</h2>

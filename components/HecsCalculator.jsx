@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FY, hecs, simulateHecs, HECS } from '../lib/tax';
+import SaveConfig from './SaveConfig';
 
 const STRINGS = {
   en: {
@@ -102,6 +103,21 @@ export default function HecsCalculator({ lang = 'en' }) {
           <MoneyField id="h-idx" label={t.idxLbl} symbol="%" value={idx} onChange={(e) => setIdx(e.target.value.replace(/[^0-9.]/g, ''))} />
           <MoneyField id="h-growth" label={t.growthLbl} symbol="%" value={growth} onChange={(e) => setGrowth(e.target.value.replace(/[^0-9.]/g, ''))} />
         </div>
+
+        <SaveConfig
+          tool="hecs"
+          lang={lang}
+          getInputs={() => ({ income, debt, vol, idx, growth })}
+          summarise={(i) => `$${i.debt} debt · $${i.income}/yr${i.vol ? ' · +$' + i.vol + ' extra' : ''}`}
+          suggestName={() => `HECS · $${debt}`}
+          onRestore={(i) => {
+            if (i.income != null) setIncome(String(i.income));
+            if (i.debt != null) setDebt(String(i.debt));
+            if (i.vol != null) setVol(String(i.vol));
+            if (i.idx != null) setIdx(String(i.idx));
+            if (i.growth != null) setGrowth(String(i.growth));
+          }}
+        />
       </div>
 
       <div className="payslip" aria-live="polite">

@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FY, incomeTax, lito, medicare, hecs } from '../lib/tax';
+import SaveConfig from './SaveConfig';
 
 const STRINGS = {
   en: {
@@ -159,6 +160,22 @@ export default function CasualPayCalculator({ lang = 'en' }) {
             <div><div className="t">{t.mlLbl}</div></div>
           </label>
         </div>
+
+        <SaveConfig
+          tool="casual-pay"
+          lang={lang}
+          getInputs={() => ({ rate, ord, sat, satX, sun, sunX, ph, phX, weeks, withHecs, withMl })}
+          summarise={(i) => `$${i.rate}/hr · ${i.ord}h/wk · ${i.weeks} wks/yr`}
+          suggestName={() => `${lang === 'vi' ? 'Lương casual' : 'Casual pay'} · $${rate}/h`}
+          onRestore={(i) => {
+            const set = { rate: setRate, ord: setOrd, sat: setSat, satX: setSatX, sun: setSun, sunX: setSunX, ph: setPh, phX: setPhX, weeks: setWeeks };
+            Object.entries(set).forEach(([k, fn]) => {
+              if (i[k] != null) fn(String(i[k]));
+            });
+            if (i.withHecs != null) setWithHecs(!!i.withHecs);
+            if (i.withMl != null) setWithMl(!!i.withMl);
+          }}
+        />
       </div>
 
       <div className="payslip" aria-live="polite">

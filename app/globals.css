@@ -212,3 +212,48 @@ textarea.cv-in{resize:vertical}
 .kw-chip.ok{background:var(--green-soft);color:var(--green)}
 .kw-chip.miss{background:#fdf1da;color:#8a6508}
 .kw-score{font-family:var(--font-display);font-weight:700;font-size:1.4rem}
+
+/* ---------- save configuration (on calculators) ---------- */
+.saveconfig{margin-top:1.3rem;padding-top:1.1rem;border-top:1px dashed var(--line)}
+.saveconfig-form label{font-size:.84rem;font-weight:600;margin-bottom:.4rem}
+.saveconfig-form input[type="text"]{font-family:var(--font-body);font-size:.95rem;padding-left:.9rem}
+.saveconfig-btns{display:flex;gap:.5rem;margin-top:.6rem}
+.saveconfig-btns .btn-primary,.saveconfig-btns .btn-secondary{width:auto;padding:.55rem 1.1rem}
+.saveconfig-ok{margin-top:.7rem;font-size:.82rem;color:var(--green);font-weight:600}
+.saveconfig-ok a{font-weight:600}
+.saveconfig-err{margin-top:.7rem;font-size:.82rem;color:var(--danger);font-weight:500}
+.saveconfig-note{margin-bottom:.7rem;font-size:.8rem;color:var(--muted);background:var(--green-soft);
+  border-radius:8px;padding:.5rem .7rem}
+
+/* ---------- dashboard ---------- */
+.dash-head{display:flex;align-items:center;justify-content:space-between;gap:1rem;flex-wrap:wrap}
+.dash-head .lang-link{background:transparent;font-family:var(--font-display)}
+.dash-loading{color:var(--muted);font-family:var(--font-mono);padding:2rem 0}
+.dash-empty{max-width:34rem;margin-top:1.5rem;display:flex;flex-direction:column;gap:.6rem;align-items:flex-start}
+.dash-list{list-style:none;display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));
+  gap:1rem;margin-top:.8rem}
+.dash-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:1.2rem}
+.dash-card-top{display:flex;justify-content:space-between;align-items:center;gap:.6rem;margin-bottom:.6rem}
+.dash-badge{font-family:var(--font-mono);font-size:.66rem;font-weight:600;letter-spacing:.05em;
+  text-transform:uppercase;background:var(--green-soft);color:var(--green);padding:.2rem .5rem;border-radius:5px}
+.dash-date{font-size:.72rem;color:var(--muted);font-family:var(--font-mono);white-space:nowrap}
+.dash-name{display:block;background:none;border:none;padding:0;text-align:left;cursor:text;
+  font-family:var(--font-display);font-weight:700;font-size:1.02rem;letter-spacing:-.01em;color:var(--ink)}
+.dash-name:hover{color:var(--green)}
+.dash-name-input{width:100%;font-family:var(--font-display);font-weight:700;font-size:1.02rem;
+  padding:.4rem .5rem;border:1.5px solid var(--green);border-radius:7px;background:#fff;color:var(--ink)}
+.dash-summary{margin-top:.4rem;font-size:.82rem;color:var(--muted);font-family:var(--font-mono)}
+.dash-actions{display:flex;flex-wrap:wrap;gap:.3rem .9rem;align-items:center;margin-top:.9rem}
+.dash-link{font-size:.8rem;font-weight:600;text-decoration:none}
+.dash-act{background:none;border:none;padding:0;font-family:var(--font-body);font-size:.8rem;
+  font-weight:600;color:var(--muted);cursor:pointer}
+.dash-act:hover{color:var(--green)}
+.dash-act-danger:hover{color:var(--danger)}
+.dash-edit{margin-top:.8rem;display:flex;flex-direction:column;gap:.5rem}
+.dash-edit-row{display:flex;align-items:center;justify-content:space-between;gap:.8rem;font-size:.82rem}
+.dash-edit-row span{color:var(--muted);flex-shrink:0}
+.dash-edit-row input[type="text"]{width:9rem;padding:.4rem .6rem;font-size:.9rem}
+.dash-edit-row input[type="checkbox"]{width:16px;height:16px;accent-color:var(--green);cursor:pointer}
+.dash-fields-note{font-size:.74rem;color:var(--muted);margin-top:.2rem}
+.dash-edit .dash-actions{margin-top:.4rem}
+.dash-edit .btn-primary,.dash-edit .btn-secondary{width:auto;padding:.5rem 1rem}

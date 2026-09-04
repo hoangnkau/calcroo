@@ -2,6 +2,7 @@
 
 import { useState } from 'react';
 import { FY, incomeTax, lito, medicare, hecs, marginalRate } from '../lib/tax';
+import SaveConfig from './SaveConfig';
 
 const STRINGS = {
   en: {
@@ -118,6 +119,20 @@ export default function TaxCalculator({ lang = 'en' }) {
             </div>
           </label>
         </div>
+
+        <SaveConfig
+          tool="income-tax"
+          lang={lang}
+          getInputs={() => ({ raw, withHecs, withMl, freq })}
+          summarise={(i) => `$${i.raw}/yr${i.withHecs ? ' · HECS' : ''}${i.withMl ? '' : ' · no ML'}`}
+          suggestName={() => `${lang === 'vi' ? 'Thuế' : 'Tax'} · $${raw} · FY ${FY}`}
+          onRestore={(i) => {
+            if (i.raw != null) setRaw(String(i.raw));
+            if (i.withHecs != null) setWithHecs(!!i.withHecs);
+            if (i.withMl != null) setWithMl(!!i.withMl);
+            if (i.freq != null) setFreq(Number(i.freq));
+          }}
+        />
       </div>
 
       <div className="payslip" aria-live="polite">

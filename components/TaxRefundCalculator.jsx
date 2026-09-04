@@ -4,6 +4,7 @@ import { useState } from 'react';
 import {
   FY_DATA, incomeTaxForMonths, litoFor, medicareFor, hecsFor, mlsFor, partYearThreshold, WFH_FIXED_RATE,
 } from '../lib/tax';
+import SaveConfig from './SaveConfig';
 
 const STRINGS = {
   en: {
@@ -363,6 +364,34 @@ export default function TaxRefundCalculator({ lang = 'en' }) {
             </label>
           </div>
         </details>
+
+        <SaveConfig
+          tool="tax-refund"
+          lang={lang}
+          getInputs={() => ({
+            fy, income, iSalary, iJob2, iInterest, iDiv, iFrank, iBiz, iOtherInc,
+            dedTotal, wfhHours, wfhRate, dCar, dCloth, dTools, dGifts, dAgent, dOther,
+            wh, withHecs, months: String(months), repSuper, mlMode, hasCover,
+          })}
+          summarise={(i) => `FY ${i.fy} · income $${i.income} · deductions $${i.dedTotal}`}
+          suggestName={() => `${lang === 'vi' ? 'Hoàn thuế' : 'Refund'} · FY ${fy}`}
+          onRestore={(i) => {
+            const setters = {
+              fy: setFy, income: setIncome, iSalary: setISalary, iJob2: setIJob2,
+              iInterest: setIInterest, iDiv: setIDiv, iFrank: setIFrank, iBiz: setIBiz,
+              iOtherInc: setIOtherInc, dedTotal: setDedTotal, wfhHours: setWfhHours,
+              wfhRate: setWfhRate, dCar: setDCar, dCloth: setDCloth, dTools: setDTools,
+              dGifts: setDGifts, dAgent: setDAgent, dOther: setDOther, wh: setWh,
+              repSuper: setRepSuper, mlMode: setMlMode,
+            };
+            Object.entries(setters).forEach(([k, fn]) => {
+              if (i[k] != null) fn(String(i[k]));
+            });
+            if (i.months != null) setMonths(Number(i.months));
+            if (i.withHecs != null) setWithHecs(!!i.withHecs);
+            if (i.hasCover != null) setHasCover(!!i.hasCover);
+          }}
+        />
       </div>
 
       <div className="payslip" aria-live="polite">
