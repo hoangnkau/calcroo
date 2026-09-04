@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { FY, incomeTax, lito, medicare, hecs, SUPER } from '../lib/tax';
-import SaveConfig from './SaveConfig';
+import SaveShareBar from './SaveShareBar';
 
 const STRINGS = {
   en: {
@@ -136,7 +136,7 @@ export default function SalarySacrificeCalculator({ lang = 'en' }) {
             : t.capOk(fmt(capUsed), fmt(SUPER.concessionalCap))}
         </div>
 
-        <SaveConfig
+        <SaveShareBar
           tool="salary-sacrifice"
           lang={lang}
           getInputs={() => ({ salary, sac, withHecs })}

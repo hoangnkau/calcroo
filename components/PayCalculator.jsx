@@ -1,9 +1,11 @@
 'use client';
 
-import { memo, useCallback, useMemo, useState } from 'react';
+import { memo, useCallback, useEffect, useMemo, useState } from 'react';
 import { FY } from '../lib/tax';
 import { computePay, comparePay, clamp, DIVISORS } from '../lib/pay';
-import SaveConfig from './SaveConfig';
+import { readShareParam, decodeShareState } from '../lib/shareLink';
+import SaveShareBar from './SaveShareBar';
+import ShareButton from './ShareButton';
 import PayCompareChart from './PayCompareChart';
 
 const STRINGS = {
@@ -174,7 +176,7 @@ const PayInputs = memo(function PayInputs({ idp, title, t, values, onField }) {
 });
 
 /* ---- compare view ---- */
-function CompareView({ t, job1, job2, setField1, setField2, view, setView }) {
+function CompareView({ t, lang, job1, job2, setJob1, setJob2, setField1, setField2, view, setView }) {
   const cmp = useMemo(() => comparePay(toCalcInput(job1), toCalcInput(job2)), [job1, job2]);
   const div = DIVISORS[view];
 
@@ -203,6 +205,19 @@ function CompareView({ t, job1, job2, setField1, setField2, view, setView }) {
       <div className="pay-compare-cols">
         <PayInputs idp="j1" title={t.job1} t={t} values={job1} onField={setField1} />
         <PayInputs idp="j2" title={t.job2} t={t} values={job2} onField={setField2} />
+      </div>
+
+      <div className="pay-compare-actions">
+        <ShareButton
+          tool="pay-compare"
+          lang={lang}
+          getState={() => ({ job1, job2, view })}
+          onRestore={(d) => {
+            if (d.job1 && typeof d.job1 === 'object') setJob1((j) => ({ ...j, ...d.job1 }));
+            if (d.job2 && typeof d.job2 === 'object') setJob2((j) => ({ ...j, ...d.job2 }));
+            if (d.view === 'year' || d.view === 'month' || d.view === 'week') setView(d.view);
+          }}
+        />
       </div>
 
       <div className="payslip cmp-panel" aria-live="polite">
@@ -353,7 +368,7 @@ function SingleView({ t, lang, raw, setRaw, period, setPeriod, hours, setHours, 
           </label>
         </div>
 
-        <SaveConfig
+        <SaveShareBar
           tool="pay"
           lang={lang}
           getInputs={() => ({ raw, period, hours, withHecs, withMl })}
@@ -430,9 +445,24 @@ function SingleView({ t, lang, raw, setRaw, period, setPeriod, hours, setHours, 
   );
 }
 
+function sharedIsCompare() {
+  if (typeof window === 'undefined') return false;
+  try {
+    const raw = readShareParam('data');
+    return raw ? decodeShareState(raw)?.t === 'pay-compare' : false;
+  } catch (e) {
+    return false;
+  }
+}
+
 export default function PayCalculator({ lang = 'en' }) {
   const t = STRINGS[lang];
   const [compare, setCompare] = useState(false);
+
+  // Mở link chia sẻ chế độ so sánh -> bật compare (sau hydrate, tránh mismatch).
+  useEffect(() => {
+    if (sharedIsCompare()) setCompare(true);
+  }, []);
 
   // single-mode state
   const [raw, setRaw] = useState('40');
@@ -465,8 +495,11 @@ export default function PayCalculator({ lang = 'en' }) {
       {compare ? (
         <CompareView
           t={t}
+          lang={lang}
           job1={job1}
           job2={job2}
+          setJob1={setJob1}
+          setJob2={setJob2}
           setField1={setField1}
           setField2={setField2}
           view={view}

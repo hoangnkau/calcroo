@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { FY, incomeTax, lito, medicare, hecs } from '../lib/tax';
-import SaveConfig from './SaveConfig';
+import SaveShareBar from './SaveShareBar';
 
 const STRINGS = {
   en: {
@@ -161,7 +161,7 @@ export default function CasualPayCalculator({ lang = 'en' }) {
           </label>
         </div>
 
-        <SaveConfig
+        <SaveShareBar
           tool="casual-pay"
           lang={lang}
           getInputs={() => ({ rate, ord, sat, satX, sun, sunX, ph, phX, weeks, withHecs, withMl })}

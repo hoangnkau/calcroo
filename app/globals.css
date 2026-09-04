@@ -368,3 +368,25 @@ textarea.cv-in{resize:vertical}
 .spinner{width:13px;height:13px;border-radius:50%;border:2px solid currentColor;border-top-color:transparent;
   display:inline-block;animation:donut-spin .7s linear infinite}
 @media(prefers-reduced-motion:reduce){.spinner{animation-duration:1.6s}}
+
+/* ---------- share link ---------- */
+.save-share-bar{display:flex;flex-direction:column}
+.sharebtn{margin-top:.75rem}
+.sharebtn .btn-secondary{width:auto;padding:.6rem 1.1rem}
+.share-note{font-size:.8rem;font-weight:600;color:var(--green);background:var(--green-soft);
+  border-radius:8px;padding:.5rem .7rem;margin-bottom:.6rem}
+.share-note.err{color:var(--danger);background:#fbe9e5}
+.share-url{display:flex;flex-direction:column;gap:.25rem;margin-top:.6rem}
+.share-url span{font-size:.7rem;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.04em}
+.share-url input{width:100%;font-family:var(--font-mono);font-size:.8rem;padding:.5rem .6rem;
+  border:1.5px solid var(--line);border-radius:8px;background:var(--paper);color:var(--muted)}
+.share-url input:focus{outline:none;border-color:var(--green);color:var(--ink)}
+.share-toast{position:fixed;left:50%;bottom:1.4rem;transform:translateX(-50%);z-index:60;
+  background:var(--ink);color:var(--paper);font-size:.85rem;font-weight:600;
+  padding:.7rem 1.15rem;border-radius:99px;box-shadow:0 6px 22px rgba(0,0,0,.22);
+  animation:share-toast-in .2s ease}
+.share-toast.warn{background:var(--danger)}
+@keyframes share-toast-in{from{opacity:0;transform:translate(-50%,10px)}to{opacity:1;transform:translate(-50%,0)}}
+@media(prefers-reduced-motion:reduce){.share-toast{animation:none}}
+.pay-compare-actions{margin-top:1rem}
+.pay-compare-actions .sharebtn{margin-top:0}

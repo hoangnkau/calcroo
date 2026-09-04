@@ -4,7 +4,7 @@ import { useState } from 'react';
 import {
   FY_DATA, incomeTaxForMonths, litoFor, medicareFor, hecsFor, mlsFor, partYearThreshold, WFH_FIXED_RATE,
 } from '../lib/tax';
-import SaveConfig from './SaveConfig';
+import SaveShareBar from './SaveShareBar';
 
 const STRINGS = {
   en: {
@@ -365,7 +365,7 @@ export default function TaxRefundCalculator({ lang = 'en' }) {
           </div>
         </details>
 
-        <SaveConfig
+        <SaveShareBar
           tool="tax-refund"
           lang={lang}
           getInputs={() => ({

@@ -3,7 +3,7 @@
 import { useMemo, useState } from 'react';
 import { FY, hecs, HECS } from '../lib/tax';
 import { hecsVoluntaryOutcome, WEEKLY_EXTRA_MAX } from '../lib/hecsPlan';
-import SaveConfig from './SaveConfig';
+import SaveShareBar from './SaveShareBar';
 import EtfCtaSlot from './EtfCtaSlot';
 
 const STRINGS = {
@@ -157,7 +157,7 @@ export default function HecsCalculator({ lang = 'en' }) {
           <MoneyField id="h-growth" label={t.growthLbl} symbol="%" value={growth} onChange={(e) => setGrowth(e.target.value.replace(/[^0-9.]/g, ''))} />
         </div>
 
-        <SaveConfig
+        <SaveShareBar
           tool="hecs"
           lang={lang}
           getInputs={() => ({ income, debt, weeklyExtra: String(weeklyExtra), idx, growth })}

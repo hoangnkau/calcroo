@@ -5,7 +5,7 @@ import dynamic from 'next/dynamic';
 import { FY } from '../lib/tax';
 import { incomeAllocation } from '../lib/allocation';
 import { buildIncomeExportModel } from '../lib/exportModel';
-import SaveConfig from './SaveConfig';
+import SaveShareBar from './SaveShareBar';
 import ChartBoundary from './ChartBoundary';
 import ExportButtons from './ExportButtons';
 
@@ -205,7 +205,7 @@ export default function TaxCalculator({ lang = 'en' }) {
           </label>
         </div>
 
-        <SaveConfig
+        <SaveShareBar
           tool="income-tax"
           lang={lang}
           getInputs={() => ({ raw, withHecs, withMl, freq })}
