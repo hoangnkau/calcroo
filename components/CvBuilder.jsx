@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
+import { scanJobAd, highlightSegments } from '../lib/cv/keywords';
 
 const EMPTY = {
   name: '',
@@ -45,7 +46,13 @@ const STRINGS = {
     remove: 'Remove',
     psTitle: 'Preview — A4',
     print: 'Download PDF',
-    printHint: 'In the print dialog, choose "Save as PDF". The result is real selectable text — exactly what ATS systems need.',
+    printHint: 'One-click A4 PDF with real, selectable text — exactly what Australian ATS systems parse. No images, no rasterising.',
+    pdfBusy: 'Building PDF…',
+    pdfNonLatin: 'The one-click PDF supports Latin characters only. Your CV has Vietnamese diacritics — use “Print → Save as PDF” below to keep them intact.',
+    pdfErr: 'Could not build the PDF. Try “Print → Save as PDF” instead.',
+    printAlt: 'Print → Save as PDF',
+    printAltHint: 'Alternative: your browser’s print dialog. Untick “Headers and footers” for a clean ATS file.',
+    kwAdd: 'add to Skills',
     clear: 'Clear all data',
     clearConfirm: 'Delete all CV data saved in this browser?',
     saved: 'Autosaved in your browser — nothing is uploaded.',
@@ -92,7 +99,13 @@ const STRINGS = {
     remove: 'Xóa',
     psTitle: 'Xem trước — A4',
     print: 'Tải PDF',
-    printHint: 'Trong hộp thoại in, chọn "Save as PDF". Kết quả là chữ thật chọn-copy được — đúng thứ hệ thống ATS cần.',
+    printHint: 'PDF A4 một chạm, chữ thật chọn-copy được — đúng thứ hệ thống ATS của công ty Úc cần. Không ảnh, không rasterize.',
+    pdfBusy: 'Đang tạo PDF…',
+    pdfNonLatin: 'PDF một chạm chỉ hỗ trợ ký tự Latin. CV của bạn có dấu tiếng Việt — hãy dùng “In → Lưu PDF” bên dưới để giữ nguyên dấu.',
+    pdfErr: 'Không tạo được PDF. Hãy dùng “In → Lưu PDF”.',
+    printAlt: 'In → Lưu PDF',
+    printAltHint: 'Cách khác: hộp thoại in của trình duyệt. Bỏ chọn “Headers and footers” để file sạch cho ATS.',
+    kwAdd: 'thêm vào Kỹ năng',
     clear: 'Xóa toàn bộ dữ liệu',
     clearConfirm: 'Xóa toàn bộ dữ liệu CV lưu trong trình duyệt này?',
     saved: 'Tự lưu trong trình duyệt của bạn — không upload đi đâu.',
@@ -115,44 +128,18 @@ const STRINGS = {
 
 const KEY = 'calcroo-cv-v1';
 
-const STOPWORDS = new Set(
-  (
-    'a about above after again against all am an and any are as at be because been before being below ' +
-    'between both but by could did do does doing down during each few for from further had has have having ' +
-    'he her here hers herself him himself his how i if in into is it its itself just me more most my myself ' +
-    'no nor not now of off on once only or other our ours ourselves out over own same she should so some such ' +
-    'than that the their theirs them themselves then there these they this those through to too under until ' +
-    'up very was we were what when where which while who whom why will with you your yours yourself yourselves ' +
-    'able across also always among another apply applicant applicants applying available background based basic ' +
-    'candidate candidates capable currently day days duties eligible etc every excellent experience good great ' +
-    'high highly hour hours ideal including job jobs looking must need needed needs offer offering opportunity ' +
-    'position preferred required requirement requirements responsibilities role strong successful suitable team ' +
-    'time using week weeks well work working works would year years'
-  ).split(/\s+/)
-);
-
-function extractKeywords(text, max) {
-  const limit = max || 16;
-  const clauses = text.split(/[.,;:!?()\n/]+/);
-  const freq = new Map();
-  for (const clause of clauses) {
-    const words = (clause.toLowerCase().match(/[a-z][a-z']*/g) || []).filter(
-      (w) => w.length >= 3 && !STOPWORDS.has(w)
-    );
-    for (const w of words) freq.set(w, (freq.get(w) || 0) + 1);
-    for (let i = 0; i < words.length - 1; i++) {
-      const bg = words[i] + ' ' + words[i + 1];
-      freq.set(bg, (freq.get(bg) || 0) + 1.2);
-    }
-  }
-  const sorted = [...freq.entries()].sort((a, b) => b[1] - a[1] || b[0].length - a[0].length);
-  const out = [];
-  for (const [w] of sorted) {
-    if (out.some((s) => s.includes(' ') && s.split(' ').includes(w))) continue;
-    out.push(w);
-    if (out.length >= limit) break;
-  }
-  return out;
+/* Highlight từ khoá đã khớp trong preview (chỉ trên màn hình, không in ra PDF). */
+function Hi({ text, terms }) {
+  if (!terms || !terms.length || !text) return text || null;
+  return highlightSegments(text, terms).map((seg, i) =>
+    seg.hit ? (
+      <mark className="cv-hi" key={i}>
+        {seg.text}
+      </mark>
+    ) : (
+      <span key={i}>{seg.text}</span>
+    ),
+  );
 }
 
 export default function CvBuilder({ lang = 'en' }) {
@@ -200,22 +187,58 @@ export default function CvBuilder({ lang = 'en' }) {
 
   const [jobAd, setJobAd] = useState('');
   const [kw, setKw] = useState(null);
+  const [pdfBusy, setPdfBusy] = useState(false);
+  const [pdfMsg, setPdfMsg] = useState(null); // null | 'non-latin' | 'error'
 
   function analyze() {
-    const keywords = extractKeywords(jobAd);
-    if (!keywords.length) {
-      setKw({ matched: [], missing: [], none: true });
-      return;
-    }
-    const cvText = [
-      cv.name, cv.title, cv.summary, cv.skills,
-      ...cv.experience.flatMap((e) => [e.role, e.company, e.bullets]),
-      ...cv.education.flatMap((e) => [e.degree, e.school]),
-    ].join(' ').toLowerCase();
-    const matched = keywords.filter((k) => cvText.indexOf(k) !== -1);
-    const missing = keywords.filter((k) => cvText.indexOf(k) === -1);
-    setKw({ matched, missing, none: false });
+    const res = scanJobAd(jobAd, cv);
+    setKw(res.enough ? { ...res, none: false } : { matched: [], missing: [], none: true });
   }
+
+  // gợi ý: chèn nhanh 1 từ khoá còn thiếu vào ô Skills
+  function addToSkills(term) {
+    setCv((prev) => {
+      const cur = prev.skills.trim();
+      if (new RegExp('(^|,\\s*)' + term.replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '\\s*(,|$)', 'i').test(cur)) {
+        return prev;
+      }
+      return { ...prev, skills: cur ? `${cur}, ${term}` : term };
+    });
+    setKw((prev) =>
+      prev
+        ? {
+            ...prev,
+            matched: [...prev.matched, term],
+            missing: prev.missing.filter((m) => m !== term),
+          }
+        : prev,
+    );
+  }
+
+  async function downloadPdf() {
+    if (pdfBusy) return;
+    setPdfBusy(true);
+    setPdfMsg(null);
+    try {
+      const { exportCvPdf } = await import('../lib/export/cvPdf');
+      const r = await exportCvPdf(cv, {
+        sectionSummary: t.cvSummary,
+        sectionExp: t.cvExp,
+        sectionEdu: t.cvEdu,
+        sectionSkills: t.cvSkills,
+        sectionRef: t.cvRef,
+        refOnRequest: t.cvRefRequest,
+      });
+      if (!r.ok) setPdfMsg(r.reason === 'non-latin' ? 'non-latin' : 'error');
+    } catch (e) {
+      if (typeof console !== 'undefined') console.error('[Calcroo] CV PDF failed', e);
+      setPdfMsg('error');
+    } finally {
+      setPdfBusy(false);
+    }
+  }
+
+  const kwTerms = kw && !kw.none ? kw.matched : [];
 
   return (
     <div className="grid cv-grid">
@@ -286,8 +309,22 @@ export default function CvBuilder({ lang = 'en' }) {
         </div>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '.55rem', marginTop: '1.2rem' }}>
-          <button className="btn-primary" onClick={() => window.print()}>{t.print}</button>
+          <button className="btn-primary" onClick={downloadPdf} disabled={pdfBusy}>
+            {pdfBusy ? (
+              <><span className="spinner" aria-hidden="true" /> {t.pdfBusy}</>
+            ) : (
+              <>⬇ {t.print}</>
+            )}
+          </button>
           <div className="hint">{t.printHint}</div>
+          {pdfMsg === 'non-latin' && <div className="export-err">{t.pdfNonLatin}</div>}
+          {pdfMsg === 'error' && <div className="export-err">{t.pdfErr}</div>}
+
+          <button className="btn-secondary" onClick={() => window.print()} style={{ width: 'auto' }}>
+            🖨 {t.printAlt}
+          </button>
+          <div className="hint">{t.printAltHint}</div>
+
           <div className="hint">💾 {t.saved}</div>
           <button className="cv-rm" onClick={clearAll} style={{ alignSelf: 'flex-start' }}>{t.clear}</button>
         </div>
@@ -326,7 +363,15 @@ export default function CvBuilder({ lang = 'en' }) {
                 <div style={{ marginTop: '.9rem' }}>
                   <div className="hint" style={{ marginBottom: '.3rem' }}>{t.kwMiss}</div>
                   {kw.missing.map((k) => (
-                    <span className="kw-chip miss" key={k}>+ {k}</span>
+                    <button
+                      type="button"
+                      className="kw-chip miss"
+                      key={k}
+                      onClick={() => addToSkills(k)}
+                      title={t.kwAdd}
+                    >
+                      + {k}
+                    </button>
                   ))}
                 </div>
               )}
@@ -348,7 +393,7 @@ export default function CvBuilder({ lang = 'en' }) {
           {cv.summary && (
             <>
               <h2 className="cv-h">{t.cvSummary}</h2>
-              <p className="cv-p">{cv.summary}</p>
+              <p className="cv-p"><Hi text={cv.summary} terms={kwTerms} /></p>
             </>
           )}
 
@@ -365,7 +410,7 @@ export default function CvBuilder({ lang = 'en' }) {
                   {ex.bullets.trim() && (
                     <ul className="cv-ul">
                       {ex.bullets.split('\n').map((b) => b.trim()).filter(Boolean).map((b, j) => (
-                        <li key={j}>{b}</li>
+                        <li key={j}><Hi text={b} terms={kwTerms} /></li>
                       ))}
                     </ul>
                   )}
@@ -389,7 +434,7 @@ export default function CvBuilder({ lang = 'en' }) {
           {skills.length > 0 && (
             <>
               <h2 className="cv-h">{t.cvSkills}</h2>
-              <p className="cv-p">{skills.join(' · ')}</p>
+              <p className="cv-p"><Hi text={skills.join(' · ')} terms={kwTerms} /></p>
             </>
           )}
 

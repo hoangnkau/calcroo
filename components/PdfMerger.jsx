@@ -1,7 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { PDFDocument } from 'pdf-lib';
+import DropZone from './DropZone';
+
+const tick = () => new Promise((r) => setTimeout(r, 0));
 
 const STRINGS = {
   en: {
@@ -16,6 +19,9 @@ const STRINGS = {
     encrypted: 'password-protected — cannot merge',
     merge: 'Merge into one PDF',
     working: 'Merging…',
+    stProcessing: 'adding…',
+    stOk: 'added',
+    dropHint: 'Drop PDFs or photos here, or click to choose — add as many as you need. Merged in your browser; nothing is uploaded.',
     psTitle: 'Merged PDF',
     empty: 'Add files and press Merge — the result appears here.',
     pages: 'pages',
@@ -38,6 +44,9 @@ const STRINGS = {
     encrypted: 'có mật khẩu — không gộp được',
     merge: 'Gộp thành một PDF',
     working: 'Đang gộp…',
+    stProcessing: 'đang thêm…',
+    stOk: 'đã thêm',
+    dropHint: 'Kéo thả PDF hoặc ảnh vào đây, hoặc bấm để chọn — thêm bao nhiêu tuỳ ý. Gộp ngay trên trình duyệt; không upload đi đâu.',
     psTitle: 'PDF đã gộp',
     empty: 'Thêm file rồi bấm Gộp — kết quả hiện ở đây.',
     pages: 'trang',
@@ -88,9 +97,17 @@ export default function PdfMerger({ lang = 'en' }) {
   const [quality, setQuality] = useState('med');
   const [busy, setBusy] = useState(false);
   const [result, setResult] = useState(null); // {url, size, pages}
+  const itemsRef = useRef(items);
+  itemsRef.current = items;
 
-  const onFiles = (e) => {
-    const files = Array.from(e.target.files || []);
+  useEffect(
+    () => () => {
+      if (result && result.url) URL.revokeObjectURL(result.url);
+    },
+    [result],
+  );
+
+  const addFiles = (files) => {
     setResult(null);
     setItems((prev) => [
       ...prev,
@@ -101,9 +118,9 @@ export default function PdfMerger({ lang = 'en' }) {
         isPdf: f.type === 'application/pdf' || /\.pdf$/i.test(f.name),
         size: f.size,
         bad: false,
+        status: 'pending', // pending | processing | ok | bad
       })),
     ]);
-    e.target.value = '';
   };
 
   const move = (idx, dir) => {
@@ -123,15 +140,23 @@ export default function PdfMerger({ lang = 'en' }) {
   };
 
   async function merge() {
-    if (!items.length) return;
+    if (!items.length || busy) return;
     setBusy(true);
     setResult(null);
     const out = await PDFDocument.create();
     const opt = QUALITY[quality];
-    const next = [...items];
 
-    for (let i = 0; i < next.length; i++) {
-      const it = next[i];
+    // reset trạng thái
+    setItems((prev) => prev.map((it) => ({ ...it, status: 'pending', bad: false })));
+    await tick();
+
+    const current = itemsRef.current;
+    for (let i = 0; i < current.length; i++) {
+      const it = current[i];
+      const setStatus = (fields) =>
+        setItems((prev) => prev.map((p) => (p.id === it.id ? { ...p, ...fields } : p)));
+      setStatus({ status: 'processing' });
+      await tick(); // để UI vẽ lại trạng thái trước khi chạy tác vụ nặng
       try {
         if (it.isPdf) {
           const bytes = new Uint8Array(await it.file.arrayBuffer());
@@ -149,12 +174,12 @@ export default function PdfMerger({ lang = 'en' }) {
           const h = emb.height * s;
           page.drawImage(emb, { x: (A4.w - w) / 2, y: (A4.h - h) / 2, width: w, height: h });
         }
-        next[i] = { ...it, bad: false };
+        setStatus({ status: 'ok', bad: false });
       } catch {
-        next[i] = { ...it, bad: true };
+        setStatus({ status: 'bad', bad: true });
       }
+      await tick();
     }
-    setItems(next);
 
     if (out.getPageCount() > 0) {
       const bytes = await out.save({ useObjectStreams: true });
@@ -178,22 +203,18 @@ export default function PdfMerger({ lang = 'en' }) {
         <h2>{t.inTitle}</h2>
 
         <div className="field">
-          <label className="photo-pick">
-            <input
-              type="file"
-              accept="application/pdf,image/jpeg,image/png"
-              multiple
-              onChange={onFiles}
-              style={{ display: 'none' }}
-            />
-            <span>{t.pick}</span>
-          </label>
-          <div className="hint">{t.pickHint}</div>
+          <DropZone
+            accept="application/pdf,image/jpeg,image/png"
+            disabled={busy}
+            label={t.pick}
+            hint={t.dropHint}
+            onFiles={addFiles}
+          />
         </div>
 
         <div className="field">
           <label htmlFor="pm-q">{t.qLbl}</label>
-          <select id="pm-q" value={quality} onChange={(e) => setQuality(e.target.value)}>
+          <select id="pm-q" value={quality} onChange={(e) => setQuality(e.target.value)} disabled={busy}>
             <option value="high">{t.qHigh}</option>
             <option value="med">{t.qMed}</option>
             <option value="low">{t.qLow}</option>
@@ -205,20 +226,24 @@ export default function PdfMerger({ lang = 'en' }) {
         ) : (
           <div style={{ display: 'flex', flexDirection: 'column', gap: '.45rem' }}>
             {items.map((it, i) => (
-              <div key={it.id} className="pm-item">
-                <span className="pm-n">{i + 1}.</span>
+              <div key={it.id} className={`pm-item is-${it.status || 'pending'}`}>
+                <span className="pm-n">
+                  {it.status === 'processing' ? '⏳' : it.status === 'ok' ? '✓' : it.status === 'bad' ? '⚠' : i + 1 + '.'}
+                </span>
                 <span className="pm-name" title={it.name}>
                   {it.isPdf ? '📄' : '🖼'} {it.name}
                   <em>
                     {' '}
                     · {fmtKB(it.size)}
+                    {it.status === 'processing' ? ' · ' + t.stProcessing : ''}
+                    {it.status === 'ok' ? ' · ' + t.stOk : ''}
                     {it.bad ? ' · ' + t.encrypted : ''}
                   </em>
                 </span>
                 <span className="pm-btns">
-                  <button aria-label={t.up} onClick={() => move(i, -1)} disabled={i === 0}>↑</button>
-                  <button aria-label={t.down} onClick={() => move(i, 1)} disabled={i === items.length - 1}>↓</button>
-                  <button aria-label={t.remove} onClick={() => remove(i)} className="pm-x">✕</button>
+                  <button aria-label={t.up} onClick={() => move(i, -1)} disabled={i === 0 || busy}>↑</button>
+                  <button aria-label={t.down} onClick={() => move(i, 1)} disabled={i === items.length - 1 || busy}>↓</button>
+                  <button aria-label={t.remove} onClick={() => remove(i)} className="pm-x" disabled={busy}>✕</button>
                 </span>
               </div>
             ))}

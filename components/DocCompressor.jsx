@@ -1,6 +1,8 @@
 'use client';
 
-import { useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import DropZone from './DropZone';
+import { createBulkImageProcessor } from '../lib/bulkImage';
 
 const PRESETS = [
   { kb: 5000, label: '5 MB' },
@@ -13,132 +15,180 @@ const PRESETS = [
 
 const STRINGS = {
   en: {
-    inTitle: 'Your document photo or scan',
-    pick: 'Choose an image',
-    repick: 'Choose a different image',
-    pickHint: 'JPG or PNG of a document, ID, payslip or form. Processed entirely in your browser — never uploaded.',
-    heicHint: 'iPhone photo not loading? It may be HEIC format — set Camera → Formats → “Most Compatible”, or send it to yourself in a chat app and save the JPEG.',
-    targetLbl: 'Target size (your portal’s upload limit)',
-    targetHint: 'Common limits: immi/ImmiAccount ~5MB per file, many bank and government portals 1–2MB, email attachments 500KB–1MB.',
-    compress: 'Compress',
+    inTitle: 'Your document photos or scans',
+    drop: 'Drop images here or click to choose',
+    dropHint: 'JPG / PNG / WebP — add as many as you need. Everything runs in your browser; nothing is uploaded.',
+    heicHint: 'iPhone HEIC not loading? Camera → Formats → “Most Compatible”, or re-save as JPEG.',
+    targetLbl: 'Target size per file (your portal’s upload limit)',
+    targetHint: 'immi/ImmiAccount ~5MB, most bank & gov portals 1–2MB, email 500KB–1MB.',
+    compressAll: 'Compress all',
     working: 'Compressing…',
-    origLbl: 'Original',
-    resultLbl: 'Compressed',
-    reduction: 'smaller',
-    cantReach: '⚠ Could not reach the target without making the document unreadable — this is the smallest legible result.',
-    dl: 'Download compressed JPG',
-    psTitle: 'Result',
-    empty: 'Choose an image and a target size, then press Compress.',
-    dims: 'dimensions',
+    queued: 'Queued',
+    processing: 'Compressing',
+    done: 'Done',
+    failed: 'Failed',
+    cantReach: 'smallest legible size',
+    remove: 'Remove',
+    clearAll: 'Clear all',
+    dl: 'Download',
+    dlAll: 'Download all',
+    psTitle: 'Batch result',
+    empty: 'Add images, pick a target size, then Compress all.',
+    totalBefore: 'Total before',
+    totalAfter: 'Total after',
+    saved: 'saved',
+    filesDone: 'files compressed',
+    engineWorker: 'Background worker — UI stays responsive',
+    engineMain: 'Worker unavailable — processing on the main thread',
   },
   vi: {
-    inTitle: 'Ảnh giấy tờ hoặc bản scan',
-    pick: 'Chọn ảnh',
-    repick: 'Chọn ảnh khác',
-    pickHint: 'JPG hoặc PNG của giấy tờ, ID, payslip, biểu mẫu. Xử lý ngay trên trình duyệt — không upload đi đâu.',
-    heicHint: 'Ảnh iPhone không hiện? Có thể là định dạng HEIC — chỉnh Camera → Formats → “Most Compatible”, hoặc gửi ảnh qua app chat rồi lưu bản JPEG.',
-    targetLbl: 'Dung lượng mục tiêu (giới hạn upload của cổng nộp)',
-    targetHint: 'Giới hạn phổ biến: immi/ImmiAccount ~5MB mỗi file, nhiều cổng ngân hàng và chính phủ 1–2MB, đính kèm email 500KB–1MB.',
-    compress: 'Nén ảnh',
+    inTitle: 'Ảnh giấy tờ / bản scan',
+    drop: 'Kéo thả ảnh vào đây hoặc bấm để chọn',
+    dropHint: 'JPG / PNG / WebP — thêm bao nhiêu tuỳ ý. Chạy ngay trên trình duyệt; không upload đi đâu.',
+    heicHint: 'Ảnh HEIC iPhone không hiện? Camera → Formats → “Most Compatible”, hoặc lưu lại thành JPEG.',
+    targetLbl: 'Dung lượng mục tiêu mỗi file (giới hạn upload của cổng nộp)',
+    targetHint: 'immi/ImmiAccount ~5MB, đa số cổng ngân hàng & chính phủ 1–2MB, email 500KB–1MB.',
+    compressAll: 'Nén tất cả',
     working: 'Đang nén…',
-    origLbl: 'Ảnh gốc',
-    resultLbl: 'Sau khi nén',
-    reduction: 'nhỏ hơn',
-    cantReach: '⚠ Không thể đạt mục tiêu mà vẫn giữ giấy tờ đọc được — đây là mức nhỏ nhất còn rõ chữ.',
-    dl: 'Tải ảnh JPG đã nén',
-    psTitle: 'Kết quả',
-    empty: 'Chọn ảnh và dung lượng mục tiêu, rồi bấm Nén ảnh.',
-    dims: 'kích thước',
+    queued: 'Chờ',
+    processing: 'Đang nén',
+    done: 'Xong',
+    failed: 'Lỗi',
+    cantReach: 'mức nhỏ nhất còn rõ chữ',
+    remove: 'Xoá',
+    clearAll: 'Xoá hết',
+    dl: 'Tải về',
+    dlAll: 'Tải tất cả',
+    psTitle: 'Kết quả cả lô',
+    empty: 'Thêm ảnh, chọn dung lượng mục tiêu, rồi bấm Nén tất cả.',
+    totalBefore: 'Tổng trước',
+    totalAfter: 'Tổng sau',
+    saved: 'giảm',
+    filesDone: 'file đã nén',
+    engineWorker: 'Xử lý ngầm — UI không bị đơ',
+    engineMain: 'Không dùng được worker — xử lý trên luồng chính',
   },
 };
 
-const fmtKB = (bytes) =>
-  bytes >= 1024 * 1024 ? (bytes / 1024 / 1024).toFixed(2) + ' MB' : Math.round(bytes / 1024) + ' KB';
+const fmtKB = (b) =>
+  b >= 1024 * 1024 ? (b / 1024 / 1024).toFixed(2) + ' MB' : Math.round(b / 1024) + ' KB';
 
-const toBlob = (canvas, q) => new Promise((res) => canvas.toBlob(res, 'image/jpeg', q));
+const isImage = (f) => /^image\/(jpeg|png|webp)$/.test(f.type) || /\.(jpe?g|png|webp)$/i.test(f.name);
+
+let uid = 0;
 
 export default function DocCompressor({ lang = 'en' }) {
   const t = STRINGS[lang];
-  const [file, setFile] = useState(null);
-  const [img, setImg] = useState(null);
+  const [items, setItems] = useState([]);
   const [target, setTarget] = useState(1000);
-  const [busy, setBusy] = useState(false);
-  const [result, setResult] = useState(null); // {blob, url, w, h, reached}
+  const [running, setRunning] = useState(false);
+  const [engine, setEngine] = useState(null); // 'worker' | 'main'
+  const procRef = useRef(null);
+  const itemsRef = useRef(items);
+  itemsRef.current = items;
 
-  const onFile = (e) => {
-    const f = e.target.files && e.target.files[0];
-    if (!f) return;
-    setResult(null);
-    const url = URL.createObjectURL(f);
-    const im = new Image();
-    im.onload = () => {
-      setFile(f);
-      setImg(im);
-      URL.revokeObjectURL(url);
-    };
-    im.onerror = () => URL.revokeObjectURL(url);
-    im.src = url;
-  };
+  useEffect(
+    () => () => {
+      if (procRef.current) procRef.current.destroy();
+      itemsRef.current.forEach((it) => it.result && it.result.url && URL.revokeObjectURL(it.result.url));
+    },
+    [],
+  );
 
-  async function run() {
-    if (!img) return;
-    setBusy(true);
-    setResult(null);
-    const targetBytes = target * 1024;
-    const MIN_EDGE = 900; // dưới mức này chữ giấy tờ bắt đầu khó đọc
-    let scale = Math.min(1, 2400 / Math.max(img.width, img.height)); // trần 2400px cạnh dài
-    let best = null;
-    let reached = false;
+  const addFiles = useCallback((files) => {
+    const next = files.filter(isImage).map((file) => ({
+      id: 'f' + (uid += 1),
+      file,
+      name: file.name,
+      size: file.size,
+      status: 'queued',
+      progress: 0,
+      result: null,
+      error: null,
+    }));
+    if (next.length) setItems((prev) => [...prev, ...next]);
+  }, []);
 
-    for (let round = 0; round < 8; round++) {
-      const w = Math.round(img.width * scale);
-      const h = Math.round(img.height * scale);
-      const c = document.createElement('canvas');
-      c.width = w;
-      c.height = h;
-      const ctx = c.getContext('2d');
-      ctx.fillStyle = '#ffffff';
-      ctx.fillRect(0, 0, w, h);
-      ctx.drawImage(img, 0, 0, w, h);
+  const patch = useCallback((id, fields) => {
+    setItems((prev) => prev.map((it) => (it.id === id ? { ...it, ...fields } : it)));
+  }, []);
 
-      // binary search quality 0.45–0.92
-      let lo = 0.45;
-      let hi = 0.92;
-      let blob = await toBlob(c, hi);
-      if (blob.size <= targetBytes) {
-        best = { blob, w, h };
-        reached = true;
-        break;
+  const removeItem = useCallback((id) => {
+    setItems((prev) => {
+      const gone = prev.find((it) => it.id === id);
+      if (gone && gone.result && gone.result.url) URL.revokeObjectURL(gone.result.url);
+      return prev.filter((it) => it.id !== id);
+    });
+  }, []);
+
+  const clearAll = useCallback(() => {
+    itemsRef.current.forEach((it) => it.result && it.result.url && URL.revokeObjectURL(it.result.url));
+    setItems([]);
+  }, []);
+
+  async function runAll() {
+    if (running) return;
+    const pending = itemsRef.current.filter((it) => it.status === 'queued' || it.status === 'error');
+    if (!pending.length) return;
+
+    setRunning(true);
+    if (!procRef.current) procRef.current = createBulkImageProcessor();
+    const proc = procRef.current;
+    setEngine(proc.usingWorker ? 'worker' : 'main');
+
+    for (const it of pending) {
+      patch(it.id, { status: 'processing', progress: 0, error: null });
+      let lastP = 0;
+      try {
+        const res = await proc.process(
+          it.file,
+          target * 1024,
+          {},
+          (p) => {
+            if (p - lastP >= 0.05 || p === 1) {
+              lastP = p;
+              patch(it.id, { progress: p });
+            }
+          },
+        );
+        const url = URL.createObjectURL(res.blob);
+        patch(it.id, {
+          status: 'done',
+          progress: 1,
+          result: { blob: res.blob, url, w: res.w, h: res.h, reached: res.reached, size: res.blob.size },
+        });
+      } catch (e) {
+        if (typeof console !== 'undefined') console.error('[Calcroo] compress failed', it.name, e);
+        patch(it.id, { status: 'error', error: String((e && e.message) || e) });
       }
-      for (let i = 0; i < 6; i++) {
-        const mid = (lo + hi) / 2;
-        blob = await toBlob(c, mid);
-        if (blob.size <= targetBytes) lo = mid;
-        else hi = mid;
-      }
-      blob = await toBlob(c, lo);
-      best = { blob, w, h };
-      if (blob.size <= targetBytes) {
-        reached = true;
-        break;
-      }
-      if (Math.max(w, h) * 0.82 < MIN_EDGE) break; // không hạ thêm nữa
-      scale *= 0.82;
+      // nhường luồng cho UI vẽ lại giữa các file
+      await new Promise((r) => setTimeout(r, 0));
     }
 
-    if (best) {
-      setResult({ ...best, url: URL.createObjectURL(best.blob), reached });
-    }
-    setBusy(false);
+    setEngine(proc.usingWorker ? 'worker' : 'main');
+    setRunning(false);
   }
 
-  const dl = () => {
-    if (!result) return;
+  function downloadOne(it) {
+    if (!it.result) return;
     const a = document.createElement('a');
-    a.href = result.url;
-    a.download = 'compressed-document.jpg';
+    a.href = it.result.url;
+    a.download = it.name.replace(/\.(jpe?g|png|webp)$/i, '') + '-compressed.jpg';
+    document.body.appendChild(a);
     a.click();
-  };
+    a.remove();
+  }
+
+  function downloadAll() {
+    const done = itemsRef.current.filter((it) => it.status === 'done');
+    done.forEach((it, i) => setTimeout(() => downloadOne(it), i * 180));
+  }
+
+  const doneItems = items.filter((it) => it.status === 'done');
+  const totalBefore = items.reduce((s, it) => s + it.size, 0);
+  const totalAfter = doneItems.reduce((s, it) => s + (it.result ? it.result.size : 0), 0);
+  const doneBefore = doneItems.reduce((s, it) => s + it.size, 0);
+  const pct = doneBefore > 0 ? Math.round((1 - totalAfter / doneBefore) * 100) : 0;
 
   return (
     <div className="grid">
@@ -146,28 +196,88 @@ export default function DocCompressor({ lang = 'en' }) {
         <h2>{t.inTitle}</h2>
 
         <div className="field">
-          <label className="photo-pick">
-            <input type="file" accept="image/jpeg,image/png,image/webp" onChange={onFile} style={{ display: 'none' }} />
-            <span>{img ? t.repick : t.pick}</span>
-          </label>
-          <div className="hint">{t.pickHint}</div>
+          <DropZone
+            accept="image/jpeg,image/png,image/webp"
+            disabled={running}
+            label={t.drop}
+            hint={t.dropHint}
+            onFiles={addFiles}
+          />
           <div className="hint">{t.heicHint}</div>
         </div>
 
         <div className="field">
           <label htmlFor="dc-target">{t.targetLbl}</label>
-          <select id="dc-target" value={target} onChange={(e) => setTarget(+e.target.value)}>
+          <select id="dc-target" value={target} onChange={(e) => setTarget(+e.target.value)} disabled={running}>
             {PRESETS.map((p) => (
-              <option key={p.kb} value={p.kb}>≤ {p.label}</option>
+              <option key={p.kb} value={p.kb}>
+                ≤ {p.label}
+              </option>
             ))}
           </select>
           <div className="hint">{t.targetHint}</div>
         </div>
 
-        {img && (
-          <button className="btn-primary" onClick={run} disabled={busy}>
-            {busy ? t.working : t.compress}
-          </button>
+        {items.length > 0 && (
+          <>
+            <ul className="file-list">
+              {items.map((it) => (
+                <li key={it.id} className={`file-row is-${it.status}`}>
+                  {it.result ? (
+                    <img className="file-thumb" src={it.result.url} alt="" loading="lazy" />
+                  ) : (
+                    <span className="file-thumb ph">🖼</span>
+                  )}
+                  <div className="file-main">
+                    <span className="file-name" title={it.name}>{it.name}</span>
+                    <span className="file-meta">
+                      {it.status === 'done' && it.result
+                        ? `${fmtKB(it.size)} → ${fmtKB(it.result.size)}` +
+                          (it.result.reached ? '' : ` · ${t.cantReach}`)
+                        : it.status === 'error'
+                        ? t.failed
+                        : `${fmtKB(it.size)} · ${t[it.status] || it.status}`}
+                    </span>
+                    {it.status === 'processing' && (
+                      <span className="file-bar">
+                        <span className="file-bar-fill" style={{ width: Math.round(it.progress * 100) + '%' }} />
+                      </span>
+                    )}
+                  </div>
+                  <div className="file-actions">
+                    {it.status === 'done' && (
+                      <button type="button" className="file-btn" onClick={() => downloadOne(it)}>
+                        ⬇
+                      </button>
+                    )}
+                    <button
+                      type="button"
+                      className="file-btn file-btn-x"
+                      onClick={() => removeItem(it.id)}
+                      disabled={running && it.status === 'processing'}
+                      aria-label={t.remove}
+                    >
+                      ✕
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+
+            <div className="file-list-actions">
+              <button type="button" className="btn-primary" onClick={runAll} disabled={running}>
+                {running ? t.working : t.compressAll}
+              </button>
+              <button type="button" className="cv-rm" onClick={clearAll} disabled={running}>
+                {t.clearAll}
+              </button>
+            </div>
+            {engine && (
+              <div className="hint engine-badge">
+                {engine === 'worker' ? '⚙ ' + t.engineWorker : '• ' + t.engineMain}
+              </div>
+            )}
+          </>
         )}
       </div>
 
@@ -177,41 +287,33 @@ export default function DocCompressor({ lang = 'en' }) {
           <span className="fy">JPEG</span>
         </div>
         <div style={{ padding: '1.3rem 1.5rem' }}>
-          {!img && <div className="hint">{t.empty}</div>}
-          {img && file && (
+          {items.length === 0 && <div className="hint">{t.empty}</div>}
+          {items.length > 0 && (
             <div className="lines" style={{ padding: 0, border: 'none' }}>
               <div className="line">
-                <span className="k">{t.origLbl}</span>
-                <span className="v">{fmtKB(file.size)} · {img.width}×{img.height}</span>
+                <span className="k">{t.totalBefore}</span>
+                <span className="v">{fmtKB(totalBefore)}</span>
               </div>
-              {result && (
+              {doneItems.length > 0 && (
                 <>
                   <div className="line total">
-                    <span className="k">{t.resultLbl}</span>
-                    <span className="v">{fmtKB(result.blob.size)} · {result.w}×{result.h}</span>
+                    <span className="k">{t.totalAfter}</span>
+                    <span className="v">{fmtKB(totalAfter)}</span>
                   </div>
                   <div className="line plus">
-                    <span className="k"></span>
-                    <span className="v">−{Math.round((1 - result.blob.size / file.size) * 100)}% {t.reduction}</span>
+                    <span className="k">
+                      {doneItems.length} {t.filesDone}
+                    </span>
+                    <span className="v">−{pct}% {t.saved}</span>
                   </div>
                 </>
               )}
             </div>
           )}
-          {result && (
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '.7rem', marginTop: '1rem' }}>
-              {!result.reached && (
-                <div className="hint" style={{ padding: '.7rem .9rem', border: '1.5px solid var(--wattle)', borderRadius: 9, color: '#8a6508' }}>
-                  {t.cantReach}
-                </div>
-              )}
-              <img
-                src={result.url}
-                alt="compressed preview"
-                style={{ width: '100%', borderRadius: 8, border: '1px solid var(--line)' }}
-              />
-              <button className="btn-primary" onClick={dl}>{t.dl}</button>
-            </div>
+          {doneItems.length > 0 && (
+            <button type="button" className="btn-primary" style={{ marginTop: '1rem' }} onClick={downloadAll}>
+              ⬇ {t.dlAll} ({doneItems.length})
+            </button>
           )}
         </div>
       </div>

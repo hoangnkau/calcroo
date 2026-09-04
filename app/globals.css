@@ -390,3 +390,48 @@ textarea.cv-in{resize:vertical}
 @media(prefers-reduced-motion:reduce){.share-toast{animation:none}}
 .pay-compare-actions{margin-top:1rem}
 .pay-compare-actions .sharebtn{margin-top:0}
+
+/* ---------- drop zone (bulk file input) ---------- */
+.dropzone{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:.35rem;
+  text-align:center;border:2px dashed var(--green);border-radius:12px;padding:1.4rem 1rem;
+  background:var(--green-soft);cursor:pointer;transition:background .15s,border-color .15s}
+.dropzone:hover,.dropzone:focus-visible{background:#d5e8df;outline:none}
+.dropzone.over{background:#cfe6da;border-color:var(--ink)}
+.dropzone.disabled{opacity:.55;cursor:default;pointer-events:none}
+.dropzone-label{font-family:var(--font-display);font-weight:600;font-size:.9rem;color:var(--green)}
+.dropzone-hint{font-size:.74rem;color:var(--muted);max-width:32rem}
+
+/* ---------- bulk file list ---------- */
+.file-list{list-style:none;display:flex;flex-direction:column;gap:.4rem;margin:1rem 0 0}
+.file-row{display:flex;align-items:center;gap:.6rem;border:1.5px solid var(--line);border-radius:10px;
+  padding:.5rem .6rem;background:var(--card)}
+.file-row.is-error{border-color:var(--danger)}
+.file-row.is-done{border-color:var(--green)}
+.file-thumb{width:38px;height:38px;border-radius:6px;object-fit:cover;flex-shrink:0;
+  border:1px solid var(--line);background:var(--paper);display:flex;align-items:center;justify-content:center}
+.file-thumb.ph{font-size:1rem}
+.file-main{flex:1;min-width:0;display:flex;flex-direction:column;gap:.15rem}
+.file-name{font-size:.82rem;font-weight:600;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.file-meta{font-size:.72rem;color:var(--muted);font-family:var(--font-mono)}
+.file-bar{display:block;height:5px;border-radius:99px;background:var(--line);overflow:hidden;margin-top:.15rem}
+.file-bar-fill{display:block;height:100%;background:var(--green);border-radius:99px;transition:width .2s linear}
+.file-actions{display:flex;gap:.25rem;flex-shrink:0}
+.file-btn{width:28px;height:28px;border:1.5px solid var(--line);border-radius:7px;background:transparent;
+  cursor:pointer;color:var(--ink);font-size:.8rem;line-height:1}
+.file-btn:hover:not(:disabled){border-color:var(--green);color:var(--green)}
+.file-btn:disabled{opacity:.35;cursor:default}
+.file-btn-x:hover:not(:disabled){border-color:var(--danger);color:var(--danger)}
+.file-list-actions{display:flex;gap:.6rem;align-items:center;margin-top:1rem;flex-wrap:wrap}
+.file-list-actions .btn-primary{width:auto;padding:.7rem 1.2rem}
+.engine-badge{margin-top:.5rem;font-family:var(--font-mono);font-size:.72rem}
+
+/* pdf merger row status */
+.pm-item.is-processing{border-color:var(--wattle);background:var(--wattle-soft)}
+.pm-item.is-ok{border-color:var(--green)}
+.pm-item.is-bad{border-color:var(--danger)}
+
+/* ---------- CV keyword highlight ---------- */
+.cv-hi{background:#fdf1c4;color:inherit;border-radius:2px;padding:0 1px}
+button.kw-chip{border:none;cursor:pointer;font-family:var(--font-body)}
+button.kw-chip.miss:hover{background:#f7e4b8}
+@media print{.cv-hi{background:none!important;color:inherit!important;padding:0}}
